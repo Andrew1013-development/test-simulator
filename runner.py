@@ -1,0 +1,136 @@
+import sys
+import time
+import file_remover_2
+import file_sorter_2
+import file_remover
+import file_sorter
+import file_generator
+import file_seeker
+from rich.console import Console
+from rich.tree import Tree
+
+console = Console()
+__version__ = "1.2.5"
+
+def schematic_view():
+    print("Schematic view of runner.py and its functions / dependencies")
+    runner_tree = Tree("runner.py")
+    runner_tree.add("schematic_view()")
+    runner_tree.add("file_generator.py").add("generator()").add("random_string()")
+    runner_tree.add("file_seeker.py (work in progress)")
+    #runner_tree.add("file_seeker.py").add("seeker()").add("flatten_list()")
+    runner_tree.add("file_sorter.py").add("sorter()")
+    runner_tree.add("file_sorter_2.py (work-in-progress)")
+    runner_tree.add("file_remover.py").add("remover()")
+    runner_tree.add("file_remover_2.py (work-in-progress)")
+    console.print(runner_tree)
+
+def runner(directory, debug_short, dates, debug_full):
+    
+    if debug_short or debug_full:
+        print("----------INFORMATION----------")
+        print(f"testing directory: {directory}")    
+        print(f"short debug flag: {debug_short}")
+        print(f"full debug flag: {debug_full}")
+        print(f"folders count: {dates}")
+        print()
+    
+    #main code
+    current_run = 1
+    start = time.time()
+    if debug_short or debug_full:
+        print("----------GENERATOR RUNNING----------")
+    generator_time,num_files = file_generator.generator(directory,debug_short,dates,debug_full)
+    if debug_short or debug_full:
+        console.log(f"Generation completed")
+    if debug_short or debug_full:
+        print("----------SORTER RUNNING----------")
+    sorter_time = file_sorter.sorter(directory,debug_short,debug_full) 
+    if debug_short or debug_full:
+        console.log("Sorting completed")
+    if debug_short or debug_full:
+        print("----------REMOVER RUNNING----------")
+    remover_time = file_remover.remover(directory,debug_short,debug_full)
+    if debug_short or debug_full:
+        console.log("Removing completed")
+    end = time.time()
+    if debug_short or debug_full:
+        console.log(f"Iteration finished after {round(end - start,3)} seconds")
+    #print()
+    
+    execution_time = end - start
+    delta_time = end - start - (generator_time + sorter_time + remover_time)
+    if debug_full or debug_short:
+        print("----------------------------EXECUTION INFORMATION---------------------------")
+        print(f"Total time to execute all 3 functions: {round(execution_time,3)} seconds")
+        print(f"Individual time of each segment:")
+        print(f"\tGenerator: {round(generator_time,3)} seconds ({round(generator_time / (end-start) * 100,3)}% of runtime)")
+        print(f"\tSorter: {round(sorter_time,3)} seconds ({round(sorter_time / (end-start) * 100,3)}% of runtime)")
+        print(f"\tRemover: {round(remover_time,3)} seconds ({round(remover_time / (end-start) * 100,3)}% of runtime)")
+        print(f"Time dilation (delta): {round(delta_time,3)} seconds ({round((end - start - (generator_time + sorter_time + remover_time)) / (end - start) * 100,3)}% of runtime)")
+    
+    #export information
+    return [execution_time, generator_time, sorter_time, remover_time, delta_time,num_files]
+
+if __name__ == "__main__":
+    dbg = False
+    dbg_detail = False
+    if (len(sys.argv) == 5) : 
+        #6 full arguments
+        test_dir = sys.argv[1]
+        if sys.argv[2] == "-debug":
+            dbg = True
+        elif sys.argv[2] == "-nodebug":
+            dbg = False
+        else :
+            print("Invaild option for debug flag, defaulting to no short debug output.")
+        if sys.argv[3] == "-nofulldebug":
+            dbg_detail = False
+        elif sys.argv[3] == "-fulldebug":
+            dbg_detail = True
+        else:
+            print("Invaild option for detailed debug flag, defaulting to no detailed debug output.")
+        n_dates = int(sys.argv[4])
+        
+        #run until finished or Ctrl-C
+        try:
+            runner(test_dir,dbg, n_dates,dbg_detail)
+        except KeyboardInterrupt:
+            print("Ctrl-C triggered, exiting.")
+            file_remover.remover(test_dir, dbg, dbg_detail)
+            console.print_exception(show_locals=True)
+            exit()
+    else :
+        if len(sys.argv) == 2:
+            if sys.argv[1] == "help":
+                print("""Usage: 
+            python3 runner.py [dir] [debug_flag] [fulldebug_flag] [n_dates]
+            python3 runner.py help / schematic
+
+            [dir]: specifies the directory where the runner will use to store files
+            [debug_flag]: tells the script whether to use short debug output
+                -debug: True -> short debug output enabled
+                -nodebug: False -> short debug output disabled
+            [fulldebug_flag]: tells the script whether to use detailed debug output
+                -fulldebug: True -> full debug output enabled.
+                -nofulldebug: False -> full debug output disabled
+            [n_dates]: specifies how many "folders" to be created before sorting (used for generating test files)
+            
+            help: display instructions on how to use this script
+            schematic: shows schematic of this script (a test of rich.tree)
+            version: shows versions of this script and its dependencies
+            credits: shows credits (obviously)""")
+            elif sys.argv[1] == "schematic":
+                schematic_view()
+            elif sys.argv[1] == "version":
+                print(f"runner.py version {__version__}")
+                print(f"file_generator.py version {file_generator.__version__}")
+                print(f"file_seeker.py version {file_seeker.__version__}")
+                print(f"file_sorter.py version {file_sorter.__version__}")
+                print(f"file_sorter_2.py version (in testing) {file_sorter_2.__version__}")
+                print(f"file_remover.py version {file_remover.__version__}")
+                print(f"file_remover_2.py version (in testing) {file_remover_2.__version__}")
+            else :
+                print(f"Invaild second argument '{sys.argv[1]}'.")
+        else :
+            print(f"Expected 4 arguments, supplied {len(sys.argv) - 1} arguments.")
