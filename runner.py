@@ -10,7 +10,7 @@ from rich.console import Console
 from rich.tree import Tree
 
 console = Console()
-__version__ = "1.2.5"
+__version__ = "1.4.0"
 
 def schematic_view():
     print("Schematic view of runner.py and its functions / dependencies")
@@ -50,7 +50,7 @@ def runner(directory, debug_short, dates, debug_full):
         console.log("Sorting completed")
     if debug_short or debug_full:
         print("----------REMOVER RUNNING----------")
-    remover_time = file_remover.remover(directory,debug_short,debug_full)
+    remover_time = file_remover.reporter(directory,debug_short,debug_full)
     if debug_short or debug_full:
         console.log("Removing completed")
     end = time.time()
@@ -62,15 +62,15 @@ def runner(directory, debug_short, dates, debug_full):
     delta_time = end - start - (generator_time + sorter_time + remover_time)
     if debug_full or debug_short:
         print("----------------------------EXECUTION INFORMATION---------------------------")
-        print(f"Total time to execute all 3 functions: {round(execution_time,3)} seconds")
-        print(f"Individual time of each segment:")
+        print(f"Total time to execute all 3 functions (runner time): {round(execution_time,3)} seconds")
+        print(f"Individual time of each segment (individual function time):")
         print(f"\tGenerator: {round(generator_time,3)} seconds ({round(generator_time / (end-start) * 100,3)}% of runtime)")
         print(f"\tSorter: {round(sorter_time,3)} seconds ({round(sorter_time / (end-start) * 100,3)}% of runtime)")
         print(f"\tRemover: {round(remover_time,3)} seconds ({round(remover_time / (end-start) * 100,3)}% of runtime)")
         print(f"Time dilation (delta): {round(delta_time,3)} seconds ({round((end - start - (generator_time + sorter_time + remover_time)) / (end - start) * 100,3)}% of runtime)")
     
     #export information
-    return [execution_time, generator_time, sorter_time, remover_time, delta_time,num_files]
+    return [dates,execution_time, generator_time, sorter_time, remover_time, delta_time,num_files]
 
 if __name__ == "__main__":
     dbg = False
@@ -114,6 +114,7 @@ if __name__ == "__main__":
             [fulldebug_flag]: tells the script whether to use detailed debug output
                 -fulldebug: True -> full debug output enabled.
                 -nofulldebug: False -> full debug output disabled
+                Note: if fulldebug_flag is True but debug_flag is False, script will default revert debug_flag to True.
             [n_dates]: specifies how many "folders" to be created before sorting (used for generating test files)
             
             help: display instructions on how to use this script

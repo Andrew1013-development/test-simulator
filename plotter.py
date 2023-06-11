@@ -1,12 +1,14 @@
+import os
 import sys
 import runner
+import csv
 import file_remover_2
 import file_sorter_2
 import file_remover
 import file_sorter
 import file_generator
 import file_seeker
-#import matplotlib
+import plotly.graph_objects #alternative plotting library to matplotlib
 from rich.console import Console
 from rich.tree import Tree
 from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
@@ -20,7 +22,14 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "0.12.5"
+__version__ = "0.15.1"
+
+def path_checker(path):
+    path.replace('"','')
+    if os.path.isdir(path):
+        return path
+    else:
+        return os.path.join(os.path.dirname(__file__),path)
 
 def schematic_view():
     print("Schematic view of plotter.py, a script to plot time data from runner.py")
@@ -28,13 +37,14 @@ def schematic_view():
     plotter_tree.add("schematic_view()")
     plotter_tree.add("runner.py").add("runner()")
     plotter_tree.add("file_seeker.py (work in progress)")
-    #plotter_tree.add("file_seeker.py").add("seeker()").add("flatten_list")
-    plotter_tree.add("file_remover.py").add("remover()")
+    #plotter_tree.add("file_seeker.py").add("seeker() | flatten_list()")
+    plotter_tree.add("file_remover.py").add("remover() | reporter()")
     plotter_tree.add("file_remover_2.py (work in progress)")
     console.print(plotter_tree)
 
 def plotter(directory, debug, iterations, file_output,debug_full):
     dataset = []
+    iters = 0
     execution_time = 0
     generator_time = 0
     sorter_time = 0
@@ -46,7 +56,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     print("Prearing data file.....")
     f_track = open("runtime_iterations_information.txt","w+")
     f_track.truncate(0)
-    print("Tracking data created.")
+    print("Tracking data file created.")
     #print()
     
     #write raw dataset into file
@@ -59,18 +69,19 @@ def plotter(directory, debug, iterations, file_output,debug_full):
             temp = runner.runner(directory,debug,i,debug_full)
             dataset.append(temp)
 
-            execution_time += temp[0]
-            generator_time += temp[1]
-            sorter_time += temp[2]
-            remover_time += temp[3]
-            delta_time += temp[4]
-            total_files += temp[5]
+            execution_time += temp[1]
+            generator_time += temp[2]
+            sorter_time += temp[3]
+            remover_time += temp[4]
+            delta_time += temp[5]
+            total_files += temp[6]
             progress.update(task,advance=1)
 
             if (file_output):
-                f_track.writelines([str(data) for data in temp])
+                f_track.writelines(",".join([str(data) for data in temp]))
                 f_track.write('\n')
     f_track.close()
+    print()
     
     print("----------------------------EXECUTION INFORMATION (SUMMARY)---------------------------")
     print(f"Total files sorted: {total_files} files")
@@ -82,25 +93,45 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     print(f"Time dilation (delta): {round(delta_time,3)} seconds ({round(delta_time / execution_time * 100,3)}% of runtime)")
     print()
 
-    print("----------------------------EXECUTION INFORMATION (IN DETAILS)---------------------------")
-    for i in range(0,iterations):
-        print(f"Run No.{i+1}")
-        print(f"Total files sorted: {dataset[i][5]} files")
-        print(f"Total time to execute all 3 functions: {round(dataset[i][0],3)} seconds")
-        print(f"Individual time of each segment:")
-        print(f"\tGenerator: {round(dataset[i][1],3)} seconds ({round(dataset[i][1] / dataset[i][0] * 100,3)}% of runtime)")
-        print(f"\tSorter: {round(dataset[i][2],3)} seconds ({round(dataset[i][2] / dataset[i][0] * 100,3)}% of runtime)")
-        print(f"\tRemover: {round(dataset[i][3],3)} seconds ({round(dataset[i][3] / dataset[i][0] * 100,3)}% of runtime)")
-        print(f"Time dilation (delta): {round(dataset[i][4],3)} seconds ({round(dataset[i][4] / dataset[i][0] * 100,3)}% of runtime)")
-        print("-" * 25)
+    if debug or debug_full:
+        print("----------------------------EXECUTION INFORMATION (IN DETAILS)---------------------------")
+        for i in range(0,iterations):
+            print(f"Run No.{i+1}")
+            print(f"Total files sorted: {dataset[i][5]} files")
+            print(f"Total time to execute all 3 functions: {round(dataset[i][0],3)} seconds")
+            print(f"Individual time of each segment:")
+            print(f"\tGenerator: {round(dataset[i][1],3)} seconds ({round(dataset[i][1] / dataset[i][0] * 100,3)}% of runtime)")
+            print(f"\tSorter: {round(dataset[i][2],3)} seconds ({round(dataset[i][2] / dataset[i][0] * 100,3)}% of runtime)")
+            print(f"\tRemover: {round(dataset[i][3],3)} seconds ({round(dataset[i][3] / dataset[i][0] * 100,3)}% of runtime)")
+            print(f"Time dilation (delta): {round(dataset[i][4],3)} seconds ({round(dataset[i][4] / dataset[i][0] * 100,3)}% of runtime)")
+            print("-" * 25)
+        print()
 
+    #plotting code
+    print("Plotting is not ready in this version of plotter.py, exporting to .csv file....")
+    with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
+        plot_csv = csv.writer(csv_file,delimiter=",")
+        for datarow in dataset:
+            plot_csv.writerow(datarow)
+    print("Exported runtime statistics to CSV file.")
+    """
+    fig = plotly.graph_objects.Figure(
+        data = [plotly.graph_objects.Bar(x = None , y = None)],
+        layout = plotly.graph_objects.Layout(
+            title = plotly.graph_objects.layout.Title(text="test")
+        )
+    )
+
+    fig.show()
+    """
+    
 if __name__ == "__main__":
     dbg_flag = False
     dbg_full_flag = False
     fout = True
-    if (len(sys.argv) == 6) :
+    if len(sys.argv) == 6:
         #6 full arguments
-        test_dir = sys.argv[1]
+        test_dir = path_checker(sys.argv[1])
         if sys.argv[2] == "-debug": 
             dbg_flag = True
         if sys.argv[2] == "-nodebug":
@@ -146,6 +177,7 @@ if __name__ == "__main__":
             [fulldebug_flag]: tells the script whether to use detailed debug output
                 -fulldebug: True -> full debug output enabled.
                 -nofulldebug: False -> full debug output disabled
+                Note: if fulldebug_flag is True but debug_flag is False, script will default revert debug_flag to True.
             [iters]: specifies how many times to run runner.py with increasing "n_dates"
             [file_out] tells the script whethere to save time results into a text file
             

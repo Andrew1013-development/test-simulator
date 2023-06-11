@@ -1,0 +1,1 @@
+python3 plotter.py Z:\test-simulator\test -nodebug -nofiledebug 5 -file
