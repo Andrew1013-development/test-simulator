@@ -1,13 +1,11 @@
 import os
 import time
 
-__version__ = "2.1.0 | 1.0.0"
+__version__ = "2.2.0 | 1.1.0"
 
 def remover(directory, debug_short, debug_full): 
     total_files = 0
 
-    if debug_short:
-        print("Fetching and removing files.....")
     for path in os.scandir(directory):
         #convert DirEntry to usable path
         path_usable = os.path.realpath(path)
@@ -16,16 +14,13 @@ def remover(directory, debug_short, debug_full):
         if os.path.isfile(path_usable):
             #delete file
             os.remove(path_usable)
+            total_files += 1
         else :
             #recursively search for files until isfile() -> True
             total_files += remover(path_usable,debug_short,debug_full)
     
     #remove the parent folder itself
     os.rmdir(directory)
-
-    if debug_short:
-        print(f"Removed {total_files} files.")
-        print()
 
     return total_files
 

@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 def sorter(directory, debug_short, debug_full): 
     #variable
@@ -10,9 +10,8 @@ def sorter(directory, debug_short, debug_full):
     folder_name_prev = ""
     total_file_count = 0
     
+    start = time.time()
     #fetch from filenames
-    if debug_short:
-        print("Fetching files in directory....")
     for filename in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, filename)):
             folder_name_pres = filename[0:8]
@@ -23,15 +22,7 @@ def sorter(directory, debug_short, debug_full):
                 print(f"{directory}\\{filename}")
             total_file_count += 1
 
-    if debug_short:
-        print("----------------------------STAT----------------------------")
-        print(f"Fetched {total_file_count} files")
-        print(f"Total folders to create: {len(folder_name_list)} folders")
-        print()
-
     #creating files
-    if debug_short:
-        print("Creating folders....")
     for folder_name in folder_name_list:
         if debug_full:
             print(f"{directory}\\{folder_name}")
@@ -41,9 +32,6 @@ def sorter(directory, debug_short, debug_full):
             print(error)
 
     # moving files
-    if debug_short:
-        print(f"Sorting {total_file_count} files....")
-    start = time.time()
     for filename in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, filename)):
             old_path = f"{directory}\\{filename}"

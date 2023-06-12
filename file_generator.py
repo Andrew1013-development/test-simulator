@@ -4,7 +4,7 @@ import random
 import time
 import string
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 def random_string(length):
     result_str = ""
@@ -19,17 +19,12 @@ def generator(directory, debug_short, dates, debug_full) :
     file_check = [""]
 
     # setting up
-    if debug_short:
-        print("Creating test folder....")
     try:
         os.mkdir(directory)
     except OSError:
-        if debug_short:
-            print("Test folder already existed.")
+        pass
 
     #generating dates (will be used as folder structures)
-    if debug_short:
-        print(f"Generating {dates} dates.....")
     for i in range(0,dates):
         year = random.randrange(2010,2023)
         month = random.randrange(1,12)
@@ -38,15 +33,7 @@ def generator(directory, debug_short, dates, debug_full) :
         table[f"{year}{month:02d}{day:02d}"] = files 
         total_files += files
 
-    if debug_short:
-        print("--------------------STATS--------------------")
-        print(f"{dates} dates created")
-        print(f"Total files to create: {total_files} files")
-        print()
-
     # create test files
-    if debug_short:
-        print(f"Generating {total_files} files of {dates} dates.....")
     start = time.time()
     for date in table.keys():
         for file_num in range(0,table[date]):

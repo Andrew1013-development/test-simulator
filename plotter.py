@@ -1,16 +1,19 @@
 import os
 import sys
-import runner
 import csv
+import platform
+import runner
 import file_remover_2
 import file_sorter_2
 import file_remover
 import file_sorter
 import file_generator
 import file_seeker
+import file_copier
 import plotly.graph_objects #alternative plotting library to matplotlib
 from rich.console import Console
 from rich.tree import Tree
+from rich.table import Table
 from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
 
 progress_bar = Progress(
@@ -22,10 +25,47 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "0.15.1"
+__version__ = "0.16.4"
+
+def show_credits():
+    #create table
+    credit_table = Table(title="Credits",caption="Made with rich.table")
+    
+    #add columns
+    credit_table.add_column("Author",style="green")
+    credit_table.add_column("Part of codebase",style="yellow")
+    credit_table.add_column("Version used in codebase",style="cyan")
+    credit_table.add_column("Notes (if applicable)",style="magenta")
+    
+    #add rows
+    credit_table.add_row("Andrew1013","plotter.py",__version__,"")
+    credit_table.add_row("Andrew1013","runner.py",runner.__version__,"")
+    credit_table.add_row("Andrew1013","file_generator.py",file_generator.__version__,"")
+    credit_table.add_row("Andrew1013","file_sorter.py",file_sorter.__version__,"")
+    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,)
+    credit_table.add_section()
+    credit_table.add_row("Andrew1013","file_copier.py",file_copier.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_seeker.py",file_seeker.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_sorter_2.py",file_sorter_2.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
+    credit_table.add_section()
+    credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
+    credit_table.add_row("Textualize","[italic]Rich library[/italic]","13.4.1","")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library","5.14.1","")
+    
+    #print table
+    console.print(credit_table)
+    console.print("[italic]i am dying pls send help pls[/italic]")
 
 def path_checker(path):
     path.replace('"','')
+    if path == os.path.dirname(__file__):
+        return ""
     if os.path.isdir(path):
         return path
     else:
@@ -34,7 +74,7 @@ def path_checker(path):
 def schematic_view():
     print("Schematic view of plotter.py, a script to plot time data from runner.py")
     plotter_tree = Tree("plotter.py")
-    plotter_tree.add("schematic_view()")
+    plotter_tree.add("plotter() | schematic_view() | path_checker()")
     plotter_tree.add("runner.py").add("runner()")
     plotter_tree.add("file_seeker.py (work in progress)")
     #plotter_tree.add("file_seeker.py").add("seeker() | flatten_list()")
@@ -97,23 +137,26 @@ def plotter(directory, debug, iterations, file_output,debug_full):
         print("----------------------------EXECUTION INFORMATION (IN DETAILS)---------------------------")
         for i in range(0,iterations):
             print(f"Run No.{i+1}")
-            print(f"Total files sorted: {dataset[i][5]} files")
-            print(f"Total time to execute all 3 functions: {round(dataset[i][0],3)} seconds")
+            print(f"Total files sorted: {dataset[i][6]} files")
+            print(f"Total time to execute all 3 functions: {round(dataset[i][1],3)} seconds")
             print(f"Individual time of each segment:")
-            print(f"\tGenerator: {round(dataset[i][1],3)} seconds ({round(dataset[i][1] / dataset[i][0] * 100,3)}% of runtime)")
-            print(f"\tSorter: {round(dataset[i][2],3)} seconds ({round(dataset[i][2] / dataset[i][0] * 100,3)}% of runtime)")
-            print(f"\tRemover: {round(dataset[i][3],3)} seconds ({round(dataset[i][3] / dataset[i][0] * 100,3)}% of runtime)")
-            print(f"Time dilation (delta): {round(dataset[i][4],3)} seconds ({round(dataset[i][4] / dataset[i][0] * 100,3)}% of runtime)")
+            print(f"\tGenerator: {round(dataset[i][2],3)} seconds ({round(dataset[i][2] / dataset[i][1] * 100,3)}% of runtime)")
+            print(f"\tSorter: {round(dataset[i][3],3)} seconds ({round(dataset[i][3] / dataset[i][1] * 100,3)}% of runtime)")
+            print(f"\tRemover: {round(dataset[i][4],3)} seconds ({round(dataset[i][4] / dataset[i][1] * 100,3)}% of runtime)")
+            print(f"Time dilation (delta): {round(dataset[i][5],3)} seconds ({round(dataset[i][5] / dataset[i][1] * 100,3)}% of runtime)")
             print("-" * 25)
         print()
 
     #plotting code
     print("Plotting is not ready in this version of plotter.py, exporting to .csv file....")
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
+        csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
+        plot_csv.writerow(["n_time","execution time","generator_time","sorter_time","remover_time","delta_time","n_files"])
         for datarow in dataset:
             plot_csv.writerow(datarow)
     print("Exported runtime statistics to CSV file.")
+    print()
     """
     fig = plotly.graph_objects.Figure(
         data = [plotly.graph_objects.Bar(x = None , y = None)],
@@ -132,6 +175,10 @@ if __name__ == "__main__":
     if len(sys.argv) == 6:
         #6 full arguments
         test_dir = path_checker(sys.argv[1])
+        if test_dir == "":
+            print("Invaild test directory specified, test directory should not be the same as script directory.")
+            print(f"Script directory: {os.path.dirname(__file__)}")
+            exit(1)
         if sys.argv[2] == "-debug": 
             dbg_flag = True
         if sys.argv[2] == "-nodebug":
@@ -159,7 +206,7 @@ if __name__ == "__main__":
             print("Ctrl-C triggered, exiting....")
             file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
             console.print_exception(show_locals=True)
-            exit()
+            exit(1) #specify errorneous exit
     else :
         #only 2 arguments (help / schematic / version (coming soon))
         if len(sys.argv) == 2:
@@ -194,6 +241,8 @@ if __name__ == "__main__":
                 print(f"file_sorter_2.py version (in testing) {file_sorter_2.__version__}")
                 print(f"file_remover.py version {file_remover.__version__}")
                 print(f"file_remover_2.py version (in testing) {file_remover_2.__version__}")
+            elif sys.argv[1] == "credits":
+                show_credits()
             else :
                 print(f"Invaild second argument '{sys.argv[1]}'.")
         else :

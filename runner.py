@@ -1,16 +1,54 @@
 import sys
 import time
+import platform
 import file_remover_2
 import file_sorter_2
 import file_remover
 import file_sorter
 import file_generator
 import file_seeker
+import file_copier
 from rich.console import Console
 from rich.tree import Tree
+from rich.table import Table
 
 console = Console()
-__version__ = "1.4.0"
+__version__ = "1.5.4"
+
+def show_credits():
+    #create table
+    credit_table = Table(title="Credits",caption="Made with rich.table")
+    
+    #add columns
+    credit_table.add_column("Author",style="green")
+    credit_table.add_column("Part of codebase",style="yellow")
+    credit_table.add_column("Version used in codebase",style="cyan")
+    credit_table.add_column("Notes (if applicable)",style="magenta")
+
+    #add rows
+    credit_table.add_row("Andrew1013","runner.py",__version__,"")
+    credit_table.add_row("Andrew1013","file_generator.py",file_generator.__version__,"")
+    credit_table.add_row("Andrew1013","file_sorter.py",file_sorter.__version__,"")
+    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,)
+    credit_table.add_section()
+    credit_table.add_row("Andrew1013","file_copier.py",file_copier.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_seeker.py",file_seeker.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_sorter_2.py",file_sorter_2.__version__,"WIP")
+    credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
+    credit_table.add_section()
+    credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
+    credit_table.add_row("Textualize","[italic]Rich library[/italic]","13.4.1","")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library","5.14.1","")
+    
+    #print table
+    console.print(credit_table)
+    console.print("[italic]i am dying pls send help pls[/italic]")
+
 
 def schematic_view():
     print("Schematic view of runner.py and its functions / dependencies")
@@ -26,7 +64,6 @@ def schematic_view():
     console.print(runner_tree)
 
 def runner(directory, debug_short, dates, debug_full):
-    
     if debug_short or debug_full:
         print("----------INFORMATION----------")
         print(f"testing directory: {directory}")    
@@ -59,7 +96,7 @@ def runner(directory, debug_short, dates, debug_full):
     #print()
     
     execution_time = end - start
-    delta_time = end - start - (generator_time + sorter_time + remover_time)
+    delta_time = execution_time - (generator_time + sorter_time + remover_time)
     if debug_full or debug_short:
         print("----------------------------EXECUTION INFORMATION---------------------------")
         print(f"Total time to execute all 3 functions (runner time): {round(execution_time,3)} seconds")
@@ -99,7 +136,7 @@ if __name__ == "__main__":
             print("Ctrl-C triggered, exiting.")
             file_remover.remover(test_dir, dbg, dbg_detail)
             console.print_exception(show_locals=True)
-            exit()
+            exit(1)
     else :
         if len(sys.argv) == 2:
             if sys.argv[1] == "help":
@@ -131,6 +168,8 @@ if __name__ == "__main__":
                 print(f"file_sorter_2.py version (in testing) {file_sorter_2.__version__}")
                 print(f"file_remover.py version {file_remover.__version__}")
                 print(f"file_remover_2.py version (in testing) {file_remover_2.__version__}")
+            elif sys.argv[1] == "credits":
+                show_credits()
             else :
                 print(f"Invaild second argument '{sys.argv[1]}'.")
         else :
