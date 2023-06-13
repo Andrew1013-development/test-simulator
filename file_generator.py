@@ -4,11 +4,11 @@ import random
 import time
 import string
 
-__version__ = "1.1.0"
+__version__ = "1.2.1"
 
 def random_string(length):
     result_str = ""
-    for i in range(0,length): 
+    for i in range(0,length):
         result_str += random.choice(string.ascii_letters)
     return result_str
 
@@ -19,10 +19,14 @@ def generator(directory, debug_short, dates, debug_full) :
     file_check = [""]
 
     # setting up
+    
     try:
-        os.mkdir(directory)
+        if debug_short:
+            print("Creating test folder....")
+        os.makedirs(directory,exist_ok = True) #create a nested directory
     except OSError:
-        pass
+        print("Cannot create folder, exiting...")
+        exit(1)
 
     #generating dates (will be used as folder structures)
     for i in range(0,dates):
@@ -30,7 +34,7 @@ def generator(directory, debug_short, dates, debug_full) :
         month = random.randrange(1,12)
         day = random.randrange(1,28)
         files = random.randrange(10,1000)
-        table[f"{year}{month:02d}{day:02d}"] = files 
+        table[f"{year}{month:02d}{day:02d}"] = files
         total_files += files
 
     # create test files
@@ -41,16 +45,15 @@ def generator(directory, debug_short, dates, debug_full) :
             minute = random.randrange(0,59)
             second = random.randrange(0,59)
 
-            try: 
+            try:
                 file_check.index(f"{date}_{hour:02d}{minute:02d}{second:02d}")
                 file_dir = os.path.join(directory,f"{date}_{hour:02d}{minute:02d}{second:02d}.txt")
             except ValueError :
                 file_dir = os.path.join(directory,f"{date}_{hour:02d}{minute:02d}{second:02d}_{random_string(random.randrange(1,25))}.txt")
-            
+
             if debug_full:
                 print(file_dir)
-            with open(file_dir,'w') as f:
-                f.writelines(date)
+
             file_check.append(f"{date}_{hour:02d}{minute:02d}{second:02d}")
         #print(f"Created {table[date]} of date {date}")
     end = time.time()

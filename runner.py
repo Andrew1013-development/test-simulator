@@ -44,6 +44,8 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
     
     #print table
     console.print(credit_table)
