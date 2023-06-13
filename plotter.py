@@ -27,7 +27,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "0.16.6"
+__version__ = "0.16.7"
 
 def show_credits():
     #create table
@@ -156,7 +156,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
         csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
-        plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
+        #plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
         plot_csv.writerow(["n_time","execution time","generator_time","sorter_time","remover_time","delta_time","n_files"])
         for datarow in dataset:
             plot_csv.writerow(datarow)
