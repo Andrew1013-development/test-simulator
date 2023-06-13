@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import file_generator
 import file_copier
@@ -8,9 +9,9 @@ import file_remover
 import file_sorter_2
 import file_remover_2
 
-__version__ = "1.1.0"
+__version__ = "2.0.1"
 
-def runner(directory1, directory2, dates, debug_short, debug_full):
+def runner(directory1, directory2, debug_short, debug_full, dates):
     if debug_short or debug_full:
         print("----------INFORMATION----------")
         print(f"testing directory 1 (test set 1): {directory1}")
@@ -27,6 +28,7 @@ def runner(directory1, directory2, dates, debug_short, debug_full):
     if debug_short or debug_full:
         print("----------COPIER RUNNING----------")
     copier_time = file_copier.copier(directory1,directory2,debug_short,debug_full)
+    exit()
 
     #main code for old modules
     start_old = time.time()
@@ -67,15 +69,29 @@ def runner(directory1, directory2, dates, debug_short, debug_full):
     print("----------------------------EXECUTION INFORMATION (NEW MODULES)---------------------------")
     print(f"Total time to execute all 3 functions (runner time): {round(execution_time_new,3)} seconds")
     print(f"Individual time of each segment (individual function time):")
-    print(f"\tSeeker: {round(seeker_time,3)} seconds ({round(seeker_time / execution_time_new * 100,3)}% of runtime)")
-    print(f"\tSorter: {round(sorter_time_2,3)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
-    print(f"\tRemover: {round(remover_time_2,3)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
-    print(f"Time dilation (delta): {round(delta_time_new,3)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tSeeker: {round(seeker_time,10)} seconds ({round(seeker_time / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tSorter: {round(sorter_time_2,10)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tRemover: {round(remover_time_2,10)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
+    print(f"Time dilation (delta): {round(delta_time_new,10)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
 
-try:
-    n = int(input("How many times to run: "))
-    runner(directory1=r"Z:\test-simulator\test1",directory2=r"Z:\test-simulator\test2",dates=n,debug_short=False,debug_full=False)
-    print()
-except KeyboardInterrupt:
-    file_remover.remover(r"Z:\test-simulator\test1",False,False)
-    file_remover.remover(r"Z:\test-simulator\test2",False,False)
+if __name__ == "__main__" :
+    dbg_flag = False
+    fulldbg_flag = False
+
+    if len(sys.argv) == 6:
+        dir1 = sys.argv[1]
+        dir2 = sys.argv[2]
+        if sys.argv[3] == "-debug":
+            dbg_flag = True
+        elif sys.argv[3] == "-nodebug":
+            dgb_flag = False
+        else :
+            print("oh you gay for debug flag")
+        if sys.argv[4] == "-fulldebug":
+            fulldbg_flag = True
+        elif sys.argv[4] == "-nofulldebug":
+            fulldbg_flag = False
+        else:
+            print("oh another gay")
+        n_dates = int(sys.argv[5])
+        runner(dir1, dir2, dbg_flag, fulldbg_flag, n_dates)
