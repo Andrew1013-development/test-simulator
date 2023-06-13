@@ -1,6 +1,8 @@
 import os
 import sys
 import csv
+import datetime
+import importlib.metadata
 import platform
 import runner
 import file_remover_2
@@ -25,7 +27,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "0.16.4"
+__version__ = "0.16.6"
 
 def show_credits():
     #create table
@@ -50,13 +52,15 @@ def show_credits():
     credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
     credit_table.add_section()
     credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
-    credit_table.add_row("Textualize","[italic]Rich library[/italic]","13.4.1","")
+    credit_table.add_row("Textualize","[italic]Rich library[/italic]",importlib.metadata.version("rich"),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]datetime[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library","5.14.1","")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
     
     #print table
     console.print(credit_table)
@@ -91,7 +95,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     remover_time = 0
     delta_time = 0
     total_files = 0
-    
+    current_date_time = datetime.datetime.now()
     #create data file
     print("Prearing data file.....")
     f_track = open("runtime_iterations_information.txt","w+")
@@ -152,6 +156,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
         csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
+        plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
         plot_csv.writerow(["n_time","execution time","generator_time","sorter_time","remover_time","delta_time","n_files"])
         for datarow in dataset:
             plot_csv.writerow(datarow)

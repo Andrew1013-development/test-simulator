@@ -1,6 +1,7 @@
 import sys
 import time
 import platform
+import importlib.metadata
 import file_remover_2
 import file_sorter_2
 import file_remover
@@ -13,7 +14,7 @@ from rich.tree import Tree
 from rich.table import Table
 
 console = Console()
-__version__ = "1.5.4"
+__version__ = "1.5.5"
 
 def show_credits():
     #create table
@@ -37,13 +38,12 @@ def show_credits():
     credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
     credit_table.add_section()
     credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
-    credit_table.add_row("Textualize","[italic]Rich library[/italic]","13.4.1","")
+    credit_table.add_row("Textualize","[italic]Rich library[/italic]",importlib.metadata.version("rich"),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library","5.14.1","")
     
     #print table
     console.print(credit_table)
