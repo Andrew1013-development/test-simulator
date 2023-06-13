@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-__version__ = "2.3.0" #update to 2.x.x once merged
+__version__ = "2.3.2" #update to 2.x.x once merged
 
 
 def sorter(pathlist, basepath, debug_short, debug_full): 
@@ -17,7 +17,7 @@ def sorter(pathlist, basepath, debug_short, debug_full):
         folder_name = f"{filename[0:4]}-{filename[4:6]}-{filename[6:8]}"
         if folder_name != folder_name_prev:
             dst = os.path.join(basepath,folder_name)
-            os.mkdir(dst)
+            os.makedirs(dst,exist_ok=True)
             shutil.move(filepath,os.path.join(dst,filename))
             folder_name_prev = folder_name
             filepath_sorted.append(os.path.join(dst,filename))

@@ -2,19 +2,20 @@ import os
 import shutil
 import time
 
-__version__ = "1.1.0"
+__version__ = "1.2.1"
 
 def copier(directory1, directory2, debug_short, debug_full):
     files_copied = 0
     
     start = time.time()
-    os.mkdir(directory2)
+    os.makedirs(directory2)
     for filepath in os.scandir(directory1):
         src = os.path.realpath(filepath)
         path, filename = os.path.split(filepath)
+        dst = os.path.join(directory2, filename)
         if debug_full:
-            print(f"{src} -> {directory2}")
-        shutil.copy2(src,os.path.join(directory2,filename))
+            print(f"{src} -> {dst}")
+        shutil.copy2(src,dst)
         files_copied += 1
     end = time.time()
 

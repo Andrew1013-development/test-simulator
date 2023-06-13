@@ -9,7 +9,7 @@ import file_remover
 import file_sorter_2
 import file_remover_2
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 def runner(directory1, directory2, debug_short, debug_full, dates):
     if debug_short or debug_full:
@@ -28,7 +28,6 @@ def runner(directory1, directory2, debug_short, debug_full, dates):
     if debug_short or debug_full:
         print("----------COPIER RUNNING----------")
     copier_time = file_copier.copier(directory1,directory2,debug_short,debug_full)
-    exit()
 
     #main code for old modules
     start_old = time.time()
@@ -69,10 +68,10 @@ def runner(directory1, directory2, debug_short, debug_full, dates):
     print("----------------------------EXECUTION INFORMATION (NEW MODULES)---------------------------")
     print(f"Total time to execute all 3 functions (runner time): {round(execution_time_new,3)} seconds")
     print(f"Individual time of each segment (individual function time):")
-    print(f"\tSeeker: {round(seeker_time,10)} seconds ({round(seeker_time / execution_time_new * 100,3)}% of runtime)")
-    print(f"\tSorter: {round(sorter_time_2,10)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
-    print(f"\tRemover: {round(remover_time_2,10)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
-    print(f"Time dilation (delta): {round(delta_time_new,10)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tSeeker: {round(seeker_time,3)} seconds ({round(seeker_time / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tSorter: {round(sorter_time_2,3)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
+    print(f"\tRemover: {round(remover_time_2,3)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
+    print(f"Time dilation (delta): {round(delta_time_new,3)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
 
 if __name__ == "__main__" :
     dbg_flag = False
