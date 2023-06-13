@@ -74,9 +74,8 @@ def runner(directory1, directory2, dates, debug_short, debug_full):
 
 try:
     n = int(input("How many times to run: "))
-    for i in range(1,n+1):
-        runner(directory1=r"Z:\test-simulator\test1",directory2=r"Z:\test-simulator\test2",dates=i,debug_short=False,debug_full=False)
-        print()
+    runner(directory1=r"Z:\test-simulator\test1",directory2=r"Z:\test-simulator\test2",dates=n,debug_short=False,debug_full=False)
+    print()
 except KeyboardInterrupt:
     file_remover.remover(r"Z:\test-simulator\test1",False,False)
     file_remover.remover(r"Z:\test-simulator\test2",False,False)
