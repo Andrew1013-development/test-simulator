@@ -4,7 +4,7 @@ import random
 import time
 import string
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 def random_string(length):
     result_str = ""
@@ -19,7 +19,6 @@ def generator(directory, debug_short, dates, debug_full) :
     file_check = [""]
 
     # setting up
-    
     try:
         if debug_short:
             print("Creating test folder....")
@@ -53,10 +52,13 @@ def generator(directory, debug_short, dates, debug_full) :
 
             if debug_full:
                 print(file_dir)
+            with open(file_dir,"w+") as f:
+                f.writelines(f"{date}_{hour:02d}{minute:02d}{second:02d}")
 
             file_check.append(f"{date}_{hour:02d}{minute:02d}{second:02d}")
         #print(f"Created {table[date]} of date {date}")
     end = time.time()
+
     if debug_short:
         print("--------------------STATS--------------------")
         print(f"Total dates created: {dates} dates")
