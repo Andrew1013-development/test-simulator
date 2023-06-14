@@ -22,10 +22,10 @@ if int(platform.python_version_tuple()[1]) < 12:
     import matplotlib
 else :
     import plotly.graph_objects
-
+current_datetime = datetime.datetime.now().date()
 logging.basicConfig(
     level=logging.DEBUG,
-    filename="plotter.log",
+    filename=f"{current_datetime}plotter.log",
     filemode="w",
     format=f"%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
@@ -115,7 +115,6 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     delta_time_list = []
     total_files = 0
     total_files_list = []
-    current_date_time = datetime.datetime.now()
     #create data file
     print("Prearing data file.....")
     f_track = open("runtime_iterations_information.txt","w+")
