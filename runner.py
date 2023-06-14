@@ -2,6 +2,7 @@ import sys
 import time
 import platform
 import importlib.metadata
+import logging
 import file_remover_2
 import file_sorter_2
 import file_remover
@@ -114,6 +115,8 @@ def runner(directory, debug_short, dates, debug_full):
 if __name__ == "__main__":
     dbg = False
     dbg_detail = False
+    n_dates = 1
+    
     if (len(sys.argv) == 5) : 
         #6 full arguments
         test_dir = sys.argv[1]
@@ -132,9 +135,7 @@ if __name__ == "__main__":
         if int(sys.argv[4]) > 0:
             n_dates = int(sys.argv[4])
         else :
-            print("Invaild number entered, number must be above 0.")
-            print("Exiting...")
-            exit()
+            print("Invaild number entered, defaulting to 1")
         #run until finished or Ctrl-C
         try:
             runner(test_dir,dbg, n_dates,dbg_detail)

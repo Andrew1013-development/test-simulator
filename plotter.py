@@ -4,6 +4,7 @@ import csv
 import datetime
 import importlib.metadata
 import platform
+import logging
 import runner
 import file_remover_2
 import file_sorter_2
@@ -22,6 +23,13 @@ if int(platform.python_version_tuple()[1]) < 12:
 else :
     import plotly.graph_objects
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="plotter.log",
+    filemode="w",
+    format=f"%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logging.debug("logging file created")
 progress_bar = Progress(
     SpinnerColumn(),
     TextColumn("[progress.description]{task.description}"),
@@ -31,7 +39,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 def show_credits():
     #create table
@@ -113,6 +121,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     f_track = open("runtime_iterations_information.txt","w+")
     f_track.truncate(0)
     print("Tracking data file created.")
+    logging.debug("runtime_iterations_information.txt created")
     #print()
     
     #write raw dataset into file
@@ -122,6 +131,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
         for i in range(1,iterations + 1):
             if debug or debug_full:
                 print(f"---------------RUN NO.{i}---------------")
+            logging.debug(f"run no.{i} started")
             temp = runner.runner(directory,debug,i,debug_full)
             dataset.append(temp)
 
@@ -142,7 +152,10 @@ def plotter(directory, debug, iterations, file_output,debug_full):
             if (file_output):
                 f_track.writelines(",".join([str(data) for data in temp]))
                 f_track.write('\n')
+                logging.debug(f"written run no.{i}'s times into runtime_iterations_information.txt")
+            logging.debug(f"run no.{i} finished")
     f_track.close()
+    logging.debug("done writing to runtime_iterations_information.txt")
     print()
     
     print("----------------------------EXECUTION INFORMATION (SUMMARY)---------------------------")
@@ -172,13 +185,16 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     #plotting code
     print("Plotting is not ready for Python 3.11.x and below in this version of plotter.py, exporting to .csv file....")
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
+        logging.debug("runtime_stats.csv created")
         csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
         #plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
         plot_csv.writerow(["n_time","execution_time","generator_time","sorter_time","remover_time","delta_time","n_files"])
+        logging.debug("writing to runtime_stats.csv")
         for datarow in dataset:
             plot_csv.writerow(datarow)
     print("Exported runtime statistics to CSV file.")
+    logging.debug("done writing to runtime_stats.csv")
     print()
     
     if int(platform.python_version_tuple()[1]) >= 12:
@@ -195,6 +211,8 @@ if __name__ == "__main__":
     dbg_flag = False
     dbg_full_flag = False
     fout = True
+    n_iters = 1
+
     if len(sys.argv) == 6:
         #6 full arguments
         test_dir = path_checker(sys.argv[1])
@@ -217,9 +235,7 @@ if __name__ == "__main__":
         if int(sys.argv[4]) > 0:
             n_iters = int(sys.argv[4])
         else :
-            print("Invaild number entered, number must be above 0.")
-            print("Exiting...")
-            exit(1)
+            print("Invaild number entered, defaulting to 1")
         if sys.argv[5] == "-file":
             fout = True
         elif sys.argv[5] == "-nofile":
@@ -233,6 +249,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Ctrl-C triggered, exiting....")
             file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
+            logging.error("execution halted unexpectedly")
             console.print_exception(show_locals=True)
             exit(1) #specify errorneous exit
     else :
@@ -273,5 +290,7 @@ if __name__ == "__main__":
                 show_credits()
             else :
                 print(f"Invaild second argument '{sys.argv[1]}'.")
+                logging.error("invaild second argument entered")
         else :
             print(f"Expected 5 arguments, supplied {len(sys.argv) - 1} arguments")
+            logging.error("not enough arguments to continue execution")
