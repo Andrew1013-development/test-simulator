@@ -6,7 +6,7 @@ simulate sorting file by the first 8 characters of a filename as a date
 - main codebase (all .py files):
   - Windows 11 build 25387.1200 - Python 3.12.0b2
   - Ubuntu 22.04.1 LTS (running via WSL2) - Python 3.10.6
-  - macOS Catalinaa 10.15.7 (19H15) - Python 3.11.4
+  - macOS Catalina 10.15.7 (19H15) - Python 3.11.4
 - setup files (listed individually):
   - setup_win.ps1:
     - Windows 11 build 25387.1200
