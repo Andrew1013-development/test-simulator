@@ -12,11 +12,15 @@ import file_sorter
 import file_generator
 import file_seeker
 import file_copier
-import plotly.graph_objects #alternative plotting library to matplotlib
 from rich.console import Console
 from rich.tree import Tree
 from rich.table import Table
 from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
+
+if int(platform.python_version_tuple()[1]) < 12:
+    import matplotlib
+else :
+    import plotly.graph_objects
 
 progress_bar = Progress(
     SpinnerColumn(),
@@ -27,7 +31,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "0.16.7"
+__version__ = "1.0.0"
 
 def show_credits():
     #create table
@@ -60,7 +64,9 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]datetime[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
+    credit_table.add_row("Plotly","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
+    if int(platform.python_version_tuple()[1]) < 12:
+        credit_table.add_row("matplotlib","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
     
     #print table
     console.print(credit_table)
@@ -90,11 +96,17 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     dataset = []
     iters = 0
     execution_time = 0
+    execution_time_list = []
     generator_time = 0
+    generator_time_list = []
     sorter_time = 0
+    sorter_time_list = []
     remover_time = 0
+    remover_time_list = []
     delta_time = 0
+    delta_time_list = []
     total_files = 0
+    total_files_list = []
     current_date_time = datetime.datetime.now()
     #create data file
     print("Prearing data file.....")
@@ -114,11 +126,17 @@ def plotter(directory, debug, iterations, file_output,debug_full):
             dataset.append(temp)
 
             execution_time += temp[1]
+            execution_time_list.append(temp[1])
             generator_time += temp[2]
+            generator_time_list.append(temp[2])
             sorter_time += temp[3]
+            sorter_time_list.append(temp[3])
             remover_time += temp[4]
+            remover_time_list.append(temp[4])
             delta_time += temp[5]
+            delta_time_list.append(temp[5])
             total_files += temp[6]
+            total_files_list.append(temp[6])
             progress.update(task,advance=1)
 
             if (file_output):
@@ -152,27 +170,27 @@ def plotter(directory, debug, iterations, file_output,debug_full):
         print()
 
     #plotting code
-    print("Plotting is not ready in this version of plotter.py, exporting to .csv file....")
+    print("Plotting is not ready for Python 3.11.x and below in this version of plotter.py, exporting to .csv file....")
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
         csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
         #plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
-        plot_csv.writerow(["n_time","execution time","generator_time","sorter_time","remover_time","delta_time","n_files"])
+        plot_csv.writerow(["n_time","execution_time","generator_time","sorter_time","remover_time","delta_time","n_files"])
         for datarow in dataset:
             plot_csv.writerow(datarow)
     print("Exported runtime statistics to CSV file.")
     print()
-    """
-    fig = plotly.graph_objects.Figure(
-        data = [plotly.graph_objects.Bar(x = None , y = None)],
-        layout = plotly.graph_objects.Layout(
-            title = plotly.graph_objects.layout.Title(text="test")
-        )
-    )
-
-    fig.show()
-    """
     
+    if int(platform.python_version_tuple()[1]) >= 12:
+        fig = plotly.graph_objects.Figure(
+            data = [plotly.graph_objects.Bar(x=total_files_list , y=execution_time_list)],
+            layout = plotly.graph_objects.Layout(
+                title = plotly.graph_objects.layout.Title(text="test")
+            )
+        )
+        fig.show()
+    
+
 if __name__ == "__main__":
     dbg_flag = False
     dbg_full_flag = False
@@ -196,7 +214,12 @@ if __name__ == "__main__":
             dbg_detail = True
         else:
             print("Invaild option for detailed debug flag, defaulting to no detailed debug output.")
-        n_iters = int(sys.argv[4])
+        if int(sys.argv[4]) > 0:
+            n_iters = int(sys.argv[4])
+        else :
+            print("Invaild number entered, number must be above 0.")
+            print("Exiting...")
+            exit(1)
         if sys.argv[5] == "-file":
             fout = True
         elif sys.argv[5] == "-nofile":

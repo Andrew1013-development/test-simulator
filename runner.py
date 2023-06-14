@@ -14,7 +14,7 @@ from rich.tree import Tree
 from rich.table import Table
 
 console = Console()
-__version__ = "1.5.5"
+__version__ = "1.5.6"
 
 def show_credits():
     #create table
@@ -129,13 +129,17 @@ if __name__ == "__main__":
             dbg_detail = True
         else:
             print("Invaild option for detailed debug flag, defaulting to no detailed debug output.")
-        n_dates = int(sys.argv[4])
-        
+        if int(sys.argv[4]) > 0:
+            n_dates = int(sys.argv[4])
+        else :
+            print("Invaild number entered, number must be above 0.")
+            print("Exiting...")
+            exit()
         #run until finished or Ctrl-C
         try:
             runner(test_dir,dbg, n_dates,dbg_detail)
         except KeyboardInterrupt:
-            print("Ctrl-C triggered, exiting.")
+            print("Ctrl-C triggered, exiting....")
             file_remover.remover(test_dir, dbg, dbg_detail)
             console.print_exception(show_locals=True)
             exit(1)

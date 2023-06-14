@@ -12,14 +12,13 @@ import file_remover_2
 __version__ = "2.0.2"
 
 def runner(directory1, directory2, debug_short, debug_full, dates):
-    if debug_short or debug_full:
-        print("----------INFORMATION----------")
-        print(f"testing directory 1 (test set 1): {directory1}")
-        print(f"testing directory 2 (test set 2): {directory2}")    
-        print(f"short debug flag: {debug_short}")
-        print(f"full debug flag: {debug_full}")
-        print(f"folders count: {dates}")
-        print()
+    print("----------INFORMATION----------")
+    print(f"testing directory 1 (test set 1): {directory1}")
+    print(f"testing directory 2 (test set 2): {directory2}")    
+    print(f"short debug flag: {debug_short}")
+    print(f"full debug flag: {debug_full}")
+    print(f"folders count: {dates}")
+    print()
 
     #generate 2 test folders
     if debug_short or debug_full:
