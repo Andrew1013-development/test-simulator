@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 def sorter(directory, debug_short, debug_full): 
     #variable
@@ -27,7 +27,7 @@ def sorter(directory, debug_short, debug_full):
         if debug_full:
             print(os.path.join(directory,folder_name))
         try:
-            os.mkdir(os.path.join(directory,folder_name))
+            os.makedirs(os.path.join(directory,folder_name),exist_ok=True)
         except OSError as error:
             print(error)
 
