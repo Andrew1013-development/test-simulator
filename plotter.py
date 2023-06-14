@@ -5,6 +5,7 @@ import datetime
 import importlib.metadata
 import platform
 import logging
+import tracemalloc
 import runner
 import file_remover_2
 import file_sorter_2
@@ -194,7 +195,6 @@ def plotter(directory, debug, iterations, file_output,debug_full):
             plot_csv.writerow(datarow)
     print("Exported runtime statistics to CSV file.")
     logging.debug("done writing to runtime_stats.csv")
-    print()
     
     if int(platform.python_version_tuple()[1]) >= 12:
         fig = plotly.graph_objects.Figure(
@@ -243,14 +243,22 @@ if __name__ == "__main__":
             print("Invaild option for file output flag, defaulting to file output enabled.")
         
         #run until finished or Ctrl-C
+        tracemalloc.start()
         try:
             plotter(test_dir,dbg_flag,n_iters,fout,dbg_full_flag)
+            current_mem, peak_mem = tracemalloc.get_traced_memory()
+            print(f"Peak memory used: {round(peak_mem / (1024 ** 2),3)}MB")
+            tracemalloc.stop()
         except KeyboardInterrupt:
             print("Ctrl-C triggered, exiting....")
             file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
             logging.error("execution halted unexpectedly")
             console.print_exception(show_locals=True)
+            current_mem, peak_mem = tracemalloc.get_traced_memory()
+            print(f"Peak memory usage: {round(peak_mem / (1024 ** 2),3)}MB")
+            tracemalloc.stop()
             exit(1) #specify errorneous exit
+            
     else :
         #only 2 arguments (help / schematic / version (coming soon))
         if len(sys.argv) == 2:
