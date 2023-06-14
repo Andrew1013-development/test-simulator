@@ -1,1 +1,12 @@
-2023-06-14 15:16:52,255 - root - DEBUG - logging file created
+2023-06-14 21:40:56,776 - root - DEBUG - logging file created
+2023-06-14 21:40:56,778 - root - DEBUG - runtime_iterations_information.txt created
+2023-06-14 21:40:56,783 - root - DEBUG - run no.1 started
+2023-06-14 21:41:08,792 - root - DEBUG - run no.1 finished
+2023-06-14 21:41:08,792 - root - DEBUG - run no.2 started
+2023-06-14 21:41:24,607 - root - DEBUG - run no.2 finished
+2023-06-14 21:41:24,608 - root - DEBUG - run no.3 started
+2023-06-14 21:41:46,030 - root - DEBUG - run no.3 finished
+2023-06-14 21:41:46,073 - root - DEBUG - done writing to runtime_iterations_information.txt
+2023-06-14 21:41:46,137 - root - DEBUG - runtime_stats.csv created
+2023-06-14 21:41:46,138 - root - DEBUG - writing to runtime_stats.csv
+2023-06-14 21:41:46,150 - root - DEBUG - done writing to runtime_stats.csv

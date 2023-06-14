@@ -39,7 +39,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 def show_credits():
     #create table
@@ -199,7 +199,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     
     if int(platform.python_version_tuple()[1]) >= 12:
         fig = plotly.graph_objects.Figure(
-            data = [plotly.graph_objects.Bar(x=total_files_list , y=execution_time_list)],
+            data = [plotly.graph_objects.Bar(x=[i for i in range(1,n_iters+1)] , y=execution_time_list)],
             layout = plotly.graph_objects.Layout(
                 title = plotly.graph_objects.layout.Title(text="test")
             )

@@ -4,7 +4,7 @@ import random
 import time
 import string
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 def random_string(length):
     result_str = ""
@@ -27,6 +27,7 @@ def generator(directory, debug_short, dates, debug_full) :
         print("Cannot create folder, exiting...")
         exit(1)
 
+    start = time.time()
     #generating dates (will be used as folder structures)
     for i in range(0,dates):
         year = random.randrange(2010,2023)
@@ -37,7 +38,6 @@ def generator(directory, debug_short, dates, debug_full) :
         total_files += files
 
     # create test files
-    start = time.time()
     for date in table.keys():
         for file_num in range(0,table[date]):
             hour = random.randrange(0,23)
