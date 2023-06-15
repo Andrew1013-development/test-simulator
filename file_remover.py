@@ -1,7 +1,7 @@
 import os
 import time
 
-__version__ = "2.2.0 | 1.1.0"
+__version__ = "2.2.1 | 1.1.0"
 
 def remover(directory, debug_short, debug_full): 
     total_files = 0
@@ -10,9 +10,11 @@ def remover(directory, debug_short, debug_full):
         #convert DirEntry to usable path
         path_usable = os.path.realpath(path)
         if debug_full:
-            print(path_usable)
+            print(f"Scanned {path_usable}")
         if os.path.isfile(path_usable):
             #delete file
+            if debug_full:
+                print(f"Deleting {path_usable}")
             os.remove(path_usable)
             total_files += 1
         else :

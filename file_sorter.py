@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 def sorter(directory, debug_short, debug_full): 
     #variable
@@ -18,14 +18,12 @@ def sorter(directory, debug_short, debug_full):
             if (folder_name_pres != folder_name_prev):
                 folder_name_list.append(f"{folder_name_pres[0:4]}-{folder_name_pres[4:6]}-{folder_name_pres[6:8]}")
                 folder_name_prev = folder_name_pres
-            if debug_full:
-                print(os.path.join(directory,filename))
             total_file_count += 1
 
     #creating files
     for folder_name in folder_name_list:
         if debug_full:
-            print(os.path.join(directory,folder_name))
+            print(f"Creating {os.path.join(directory,folder_name)}")
         try:
             os.makedirs(os.path.join(directory,folder_name),exist_ok=True)
         except OSError as error:
@@ -37,7 +35,7 @@ def sorter(directory, debug_short, debug_full):
             old_path = os.path.join(directory,filename)
             new_path = os.path.join(directory,f"{filename[0:4]}-{filename[4:6]}-{filename[6:8]}\\{filename}")
             if debug_full:
-                print(new_path)
+                print(f"Moving {old_path} to new_path")
             shutil.move(old_path,new_path)
     end = time.time()
 

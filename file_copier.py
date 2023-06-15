@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 def copier(directory1, directory2, debug_short, debug_full):
     files_copied = 0
@@ -14,7 +14,7 @@ def copier(directory1, directory2, debug_short, debug_full):
         path, filename = os.path.split(filepath)
         dst = os.path.join(directory2, filename)
         if debug_full:
-            print(f"{src} -> {dst}")
+            print(f"Moving {src} -> {dst}")
         shutil.copy2(src,dst)
         files_copied += 1
     end = time.time()

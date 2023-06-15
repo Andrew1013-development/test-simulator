@@ -4,7 +4,7 @@ import random
 import time
 import string
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 
 def random_string(length):
     result_str = ""
@@ -51,7 +51,7 @@ def generator(directory, debug_short, dates, debug_full) :
                 file_dir = os.path.join(directory,f"{date}_{hour:02d}{minute:02d}{second:02d}_{random_string(random.randrange(1,25))}.txt")
 
             if debug_full:
-                print(file_dir)
+                print(f"Creating {file_dir}")
             with open(file_dir,"w+") as f:
                 f.writelines(f"{date}_{hour:02d}{minute:02d}{second:02d}")
 

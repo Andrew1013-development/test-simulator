@@ -1,7 +1,7 @@
 import os
 import time
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 def seeker(directory, debug_short, debug_full):
     path_list = []
@@ -12,7 +12,7 @@ def seeker(directory, debug_short, debug_full):
         if os.path.isfile(path_usable):
             #a file path is ascertained
             if debug_full:
-                print(path_usable)
+                print(f"Seeked {path_usable}")
             path_list.append(path_usable)
         else :
             #search inside folders recursively until all is a file
