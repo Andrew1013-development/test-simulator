@@ -4,9 +4,10 @@ import csv
 import datetime
 import importlib.metadata
 import platform
-import logging
+import logger
 import tracemalloc
 import runner
+import psutil
 import file_remover_2
 import file_sorter_2
 import file_remover
@@ -23,15 +24,7 @@ if int(platform.python_version_tuple()[1]) < 12:
     import matplotlib
 else :
     import plotly.graph_objects
-current_date = datetime.datetime.now().date()
-current_time = datetime.datetime.now().time()
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename=f"{current_date}_{current_time}_plotter.py.log",
-    filemode="w+",
-    format=f"%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logging.debug("logging file created")
+
 progress_bar = Progress(
     SpinnerColumn(),
     TextColumn("[progress.description]{task.description}"),
@@ -41,7 +34,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 def show_credits():
     #create table
@@ -56,6 +49,7 @@ def show_credits():
     #add rows
     credit_table.add_row("Andrew1013","plotter.py",__version__,"")
     credit_table.add_row("Andrew1013","runner.py",runner.__version__,"")
+    credit_table.add_row("Andrew1013","logger.py",logger.__version__)
     credit_table.add_row("Andrew1013","file_generator.py",file_generator.__version__,"")
     credit_table.add_row("Andrew1013","file_sorter.py",file_sorter.__version__,"")
     credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,)
@@ -74,10 +68,11 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]datetime[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]tracemalloc[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Plotly","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
-    credit_table.add_row("matplotlib","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
+    credit_table.add_row("plotly.com","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"Only supported on Python 3.12.x")
+    credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
     
     #print table
     console.print(credit_table)
@@ -123,7 +118,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     f_track = open("runtime_iterations_information.txt","w+")
     f_track.truncate(0)
     print("Tracking data file created.")
-    logging.debug("runtime_iterations_information.txt created")
+    logger.logger_module.debug("runtime_iterations_information.txt created")
     #print()
     
     #write raw dataset into file
@@ -133,7 +128,7 @@ def plotter(directory, debug, iterations, file_output,debug_full):
         for i in range(1,iterations + 1):
             if debug or debug_full:
                 print(f"---------------RUN NO.{i}---------------")
-            logging.debug(f"run no.{i} started")
+            logger.logger_module.debug(f"run no.{i} started")
             temp = runner.runner(directory,debug,i,debug_full)
             dataset.append(temp)
 
@@ -154,10 +149,10 @@ def plotter(directory, debug, iterations, file_output,debug_full):
             if (file_output):
                 f_track.writelines(",".join([str(data) for data in temp]))
                 f_track.write('\n')
-                logging.debug(f"written run no.{i}'s times into runtime_iterations_information.txt")
-            logging.debug(f"run no.{i} finished")
+                logger.logger_module.debug(f"written run no.{i}'s times into runtime_iterations_information.txt")
+            logger.logger_module.debug(f"run no.{i} finished")
     f_track.close()
-    logging.debug("done writing to runtime_iterations_information.txt")
+    logger.logger_module.debug("done writing to runtime_iterations_information.txt")
     print()
     
     print("----------------------------EXECUTION INFORMATION (SUMMARY)---------------------------")
@@ -187,16 +182,16 @@ def plotter(directory, debug, iterations, file_output,debug_full):
     #plotting code
     print("Plotting is not ready for Python 3.11.x and below in this version of plotter.py, exporting to .csv file....")
     with open("runtime_stats.csv",mode="w+",newline="") as csv_file:
-        logging.debug("runtime_stats.csv created")
+        logger.logger_module.debug("runtime_stats.csv created")
         csv_file.truncate(0)
         plot_csv = csv.writer(csv_file,delimiter=",")
         #plot_csv.writerow([f"test result date and time: {current_date_time.strftime("%d/%m/%Y %H:%M:%S")}"])
         plot_csv.writerow(["n_time","execution_time","generator_time","sorter_time","remover_time","delta_time","n_files"])
-        logging.debug("writing to runtime_stats.csv")
+        logger.logger_module.debug("writing to runtime_stats.csv")
         for datarow in dataset:
             plot_csv.writerow(datarow)
     print("Exported runtime statistics to CSV file.")
-    logging.debug("done writing to runtime_stats.csv")
+    logger.logger_module.debug("done writing to runtime_stats.csv")
     
     if int(platform.python_version_tuple()[1]) >= 12:
         fig = plotly.graph_objects.Figure(
@@ -254,7 +249,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Ctrl-C triggered, exiting....")
             file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
-            logging.error("execution halted unexpectedly")
+            logger.logger_module.error("execution halted unexpectedly")
             console.print_exception(show_locals=True)
             current_mem, peak_mem = tracemalloc.get_traced_memory()
             print(f"Peak memory usage: {round(peak_mem / (1024 ** 2),3)}MB")
@@ -299,7 +294,7 @@ if __name__ == "__main__":
                 show_credits()
             else :
                 print(f"Invaild second argument '{sys.argv[1]}'.")
-                logging.error("invaild second argument entered")
+                logger.logger_module.error("invaild second argument entered")
         else :
             print(f"Expected 5 arguments, supplied {len(sys.argv) - 1} arguments")
-            logging.error("not enough arguments to continue execution")
+            logger.logger_module.error("not enough arguments to continue execution")
