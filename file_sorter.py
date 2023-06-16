@@ -1,16 +1,18 @@
 import os
 import shutil
 import time
+from logger import logger_module
 
-__version__ = "1.2.2"
+__version__ = "1.3.0"
 
 def sorter(directory, debug_short, debug_full): 
     #variable
     folder_name_list = []
     folder_name_prev = ""
     total_file_count = 0
-    
+    logger_module.info("sorter function started")    
     start = time.time()
+    logger_module.info("fetching files to sort")
     #fetch from filenames
     for filename in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, filename)):
@@ -19,17 +21,23 @@ def sorter(directory, debug_short, debug_full):
                 folder_name_list.append(f"{folder_name_pres[0:4]}-{folder_name_pres[4:6]}-{folder_name_pres[6:8]}")
                 folder_name_prev = folder_name_pres
             total_file_count += 1
+    logger_module.info("done fetching files to sort")
 
-    #creating files
+    #creating folders
+    logger_module.info("creating sorting folders")
     for folder_name in folder_name_list:
         if debug_full:
             print(f"Creating {os.path.join(directory,folder_name)}")
         try:
             os.makedirs(os.path.join(directory,folder_name),exist_ok=True)
-        except OSError as error:
-            print(error)
+        except OSError:
+            logger_module.error("cannot create sorting folders")
+            print("Cannot create sorting directories")
+            exit(1)
+    logger_module.info("done creating sorting folders")
 
     # moving files
+    logger_module.info("moving files to their proper location")
     for filename in os.listdir(directory):
         if os.path.isfile(os.path.join(directory, filename)):
             old_path = os.path.join(directory,filename)
@@ -37,8 +45,9 @@ def sorter(directory, debug_short, debug_full):
             if debug_full:
                 print(f"Moving {old_path} to new_path")
             shutil.move(old_path,new_path)
+    logger_module.info("done moving files to their proper location")
     end = time.time()
-
+    logger_module.info("sorter function stopped.")
     if debug_short:
         print("----------------------------STAT----------------------------")
         print(f"Moved {total_file_count} files")

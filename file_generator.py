@@ -3,8 +3,9 @@ import shutil
 import random
 import time
 import string
+from logger import logger_module
 
-__version__ = "1.3.2"
+__version__ = "1.4.0"
 
 def random_string(length):
     result_str = ""
@@ -17,18 +18,22 @@ def generator(directory, debug_short, dates, debug_full) :
     table = {}
     total_files = 0
     file_check = [""]
-
+    logger_module.info("generator function started")
+    
     # setting up
+    logger_module.info("creating test directory")
     try:
         if debug_short:
             print("Creating test folder....")
         os.makedirs(directory,exist_ok = True) #create a nested directory
     except OSError:
+        logger_module.error("test folder cannot be created")
         print("Cannot create folder, exiting...")
         exit(1)
 
     start = time.time()
     #generating dates (will be used as folder structures)
+    logger_module.info("creating file dates + amount of files in each date")
     for i in range(0,dates):
         year = random.randrange(2010,2023)
         month = random.randrange(1,12)
@@ -38,6 +43,7 @@ def generator(directory, debug_short, dates, debug_full) :
         total_files += files
 
     # create test files
+    logger_module.info("creating test files")
     for date in table.keys():
         for file_num in range(0,table[date]):
             hour = random.randrange(0,23)
@@ -57,7 +63,10 @@ def generator(directory, debug_short, dates, debug_full) :
 
             file_check.append(f"{date}_{hour:02d}{minute:02d}{second:02d}")
         #print(f"Created {table[date]} of date {date}")
+    logger_module.info("done creating test files")
     end = time.time()
+
+    logger_module.info("generator function stopped")
 
     if debug_short:
         print("--------------------STATS--------------------")
