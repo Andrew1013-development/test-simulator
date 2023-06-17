@@ -1,7 +1,6 @@
 import logging
 import datetime
 
-
 __version__ = "1.0.0"
 
 current_date = str(datetime.datetime.now().date())
