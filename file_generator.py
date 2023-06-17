@@ -5,7 +5,7 @@ import time
 import string
 from logger import logger_module
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 
 def random_string(length):
     result_str = ""
@@ -13,7 +13,7 @@ def random_string(length):
         result_str += random.choice(string.ascii_letters)
     return result_str
 
-def generator(directory, debug_short, dates, debug_full) :
+def generator(directory, debug_short, dates, debug_full) -> tuple[float, int] :
     #variable
     table = {}
     total_files = 0

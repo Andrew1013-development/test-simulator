@@ -1,9 +1,9 @@
 import os
 import time
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 
-def seeker(directory, debug_short, debug_full):
+def seeker(directory, debug_short, debug_full) -> tuple[float, list[str]]:
     path_list = []
     start = time.time()
     for path in os.scandir(directory):

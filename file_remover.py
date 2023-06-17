@@ -2,7 +2,7 @@ import os
 import time
 from logger import logger_module
 
-__version__ = "2.3.0 | 1.2.0"
+__version__ = "2.3.1 | 1.2.1"
 
 def remover(directory, debug_short, debug_full): 
     total_files = 0
@@ -31,7 +31,7 @@ def remover(directory, debug_short, debug_full):
     
     return total_files
 
-def reporter(directory, debug_short, debug_full):
+def reporter(directory, debug_short, debug_full) -> float:
     sum_of_files_removed = 0
     
     logger_module.info("reporter function started")

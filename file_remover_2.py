@@ -2,9 +2,9 @@ import os
 import shutil
 import time
 
-__version__ = "2.2.0" #update to 2.x.x once merged
+__version__ = "2.2.1" #update to 2.x.x once merged
 
-def remover(path_list, base_path, debug_short, debug_full):
+def remover(path_list, base_path, debug_short, debug_full) -> float:
     start = time.time()
     for path in path_list:
         if debug_full:
