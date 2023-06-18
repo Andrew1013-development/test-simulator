@@ -22,8 +22,16 @@ def fetcher() -> dict[str, str]:
 
     return sys_info
 
+def identifier(sys_info):
+    sys_id = ""
+    sys_id += sys_info["platform"][:-2].replace(".","")
+    sys_id += str(round(sys_info["cpu_frequency"] / 1000,0))
+    print(sys_id)
+
 def writer(sys_info):
     f = open("system_info.json","w+")
     json_writer = json.dumps(sys_info,indent=4)
     f.write(json_writer)
     f.close()
+
+identifier(fetcher())
