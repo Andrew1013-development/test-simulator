@@ -2,10 +2,10 @@ import os
 import shutil
 import time
 
-__version__ = "2.3.2" #update to 2.x.x once merged
+__version__ = "2.3.3" #update to 2.x.x once merged
 
 
-def sorter(pathlist, basepath, debug_short, debug_full): 
+def sorter(pathlist, basepath, debug_short, debug_full) -> tuple[float, list[str]]: 
     #variable
     filepath_sorted = []
     folder_name_prev = ""

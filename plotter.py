@@ -34,7 +34,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 def show_credits():
     #create table
@@ -70,6 +70,7 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]tracemalloc[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]string[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
     credit_table.add_row("plotly.com","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"Only supported on Python 3.12.x")
     credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
@@ -92,6 +93,7 @@ def schematic_view():
     plotter_tree = Tree("plotter.py")
     plotter_tree.add("plotter() | schematic_view() | path_checker()")
     plotter_tree.add("runner.py").add("runner()")
+    plotter_tree.add("logger.py").add("logger")
     plotter_tree.add("file_seeker.py (work in progress)")
     #plotter_tree.add("file_seeker.py").add("seeker() | flatten_list()")
     plotter_tree.add("file_remover.py").add("remover() | reporter()")

@@ -3,9 +3,9 @@ import shutil
 import time
 from logger import logger_module
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
-def sorter(directory, debug_short, debug_full): 
+def sorter(directory, debug_short, debug_full) -> float: 
     #variable
     folder_name_list = []
     folder_name_prev = ""

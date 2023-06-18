@@ -3,9 +3,9 @@ import shutil
 import time
 from logger import logger_module
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
-def copier(directory1, directory2, debug_short, debug_full):
+def copier(directory1, directory2, debug_short, debug_full) -> float:
     files_copied = 0
     logger_module.info("copier function started")
     start = time.time()
