@@ -1,8 +1,9 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from urllib.parse import quote_plus
+import certifi
 
-__version__ = "1.0.1 | 1.0.1"
+__version__ = "1.0.2 | 1.0.1"
 
 def pinger(username, password, cluster_name, debug_short, debug_full) -> str:
     #taken directly from MongoDB's documentation
@@ -10,16 +11,18 @@ def pinger(username, password, cluster_name, debug_short, debug_full) -> str:
     password = quote_plus(password)
     cluster_name = quote_plus(cluster_name)
 
-    uri = f"mongodb+srv://{username}:{password}@{cluster_name}.ygoqv7l.mongodb.net/?retryWrites=true&w=majority"
+    uri = f"mongodb+srv://{username}:{password}@{cluster_name}.ygoqv7l.mongodb.net/"
     
     # Create a new client and connect to the server
-    client = MongoClient(uri, server_api=ServerApi('1'))
+    client = MongoClient(uri,tlsCAFile = certifi.where(),server_api=ServerApi('1'))
 
     # Send a ping to confirm a successful connection
     try:
+        print("Establishing connection to database.....")
         client.admin.command('ping')
         if debug_short:
             print("Pinged your deployment. You successfully connected to MongoDB!")
+        print("Connection established to database.")
         return uri
     except Exception as e:
         print(e)
