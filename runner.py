@@ -10,6 +10,10 @@ import file_sorter
 import file_generator
 import file_seeker
 import file_copier
+import logger
+import telemetry
+import sys_fetcher
+import sys_uploader
 from rich.console import Console
 from rich.tree import Tree
 from rich.table import Table
@@ -29,25 +33,37 @@ def show_credits():
 
     #add rows
     credit_table.add_row("Andrew1013","runner.py",__version__,"")
+    credit_table.add_row("Andrew1013","logger.py",logger.__version__,"")
+    #credit_table.add_row("Andrew1013","telemetry.py",telemetry.__version__,"")
     credit_table.add_row("Andrew1013","file_generator.py",file_generator.__version__,"")
     credit_table.add_row("Andrew1013","file_sorter.py",file_sorter.__version__,"")
-    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,)
+    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,"")
+    #credit_table.add_row("Andrew1013","sys_fetcher.py",sys_fetcher.__version__,"")
+    #credit_table.add_row("Andrew1013","sys_uploader.py",sys_uploader.__version__,"")
+    
     credit_table.add_section()
+    
     credit_table.add_row("Andrew1013","file_copier.py",file_copier.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_seeker.py",file_seeker.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_sorter_2.py",file_sorter_2.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
+    
     credit_table.add_section()
+    
     credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
     credit_table.add_row("Textualize","[italic]Rich library[/italic]",importlib.metadata.version("rich"),"")
+    credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
+    credit_table.add_row("The MongoDB Python Team","[italic]pymongo[/italic] Module",importlib.metadata.version("pymongo"),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]time[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]datetime[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]platform[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]importlib[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Plotly","[italic]Plotly[/italic] graphing library",importlib.metadata.version("plotly"),"")
-    
+    #credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]string[/italic] Module",platform.python_version(),"")
+   
     #print table
     console.print(credit_table)
     console.print("[italic]i am dying pls send help pls[/italic]")

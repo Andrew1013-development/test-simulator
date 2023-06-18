@@ -1,13 +1,19 @@
+# external modules / libraries
 import os
 import sys
 import csv
-import datetime
 import importlib.metadata
 import platform
 import logger
 import tracemalloc
 import runner
-import psutil
+import threading
+from rich.console import Console
+from rich.tree import Tree
+from rich.table import Table
+from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
+
+# my written functions
 import file_remover_2
 import file_sorter_2
 import file_remover
@@ -15,11 +21,9 @@ import file_sorter
 import file_generator
 import file_seeker
 import file_copier
-from rich.console import Console
-from rich.tree import Tree
-from rich.table import Table
-from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
-
+import telemetry
+import sys_fetcher
+import sys_uploader
 if int(platform.python_version_tuple()[1]) < 12:
     import matplotlib
 else :
@@ -34,7 +38,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "1.2.1"
+__version__ = "2.0.0-WIP-1"
 
 def show_credits():
     #create table
@@ -49,18 +53,30 @@ def show_credits():
     #add rows
     credit_table.add_row("Andrew1013","plotter.py",__version__,"")
     credit_table.add_row("Andrew1013","runner.py",runner.__version__,"")
-    credit_table.add_row("Andrew1013","logger.py",logger.__version__)
+    credit_table.add_row("Andrew1013","logger.py",logger.__version__,"")
+    credit_table.add_row("Andrew1013","telemetry.py",telemetry.__version__,"")
     credit_table.add_row("Andrew1013","file_generator.py",file_generator.__version__,"")
     credit_table.add_row("Andrew1013","file_sorter.py",file_sorter.__version__,"")
-    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,)
+    credit_table.add_row("Andrew1013","file_remover.py",file_remover.__version__,"")
+    credit_table.add_row("Andrew1013","sys_fetcher.py",sys_fetcher.__version__,"")
+    credit_table.add_row("Andrew1013","sys_uploader.py",sys_uploader.__version__,"")
+    
     credit_table.add_section()
+    
     credit_table.add_row("Andrew1013","file_copier.py",file_copier.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_seeker.py",file_seeker.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_sorter_2.py",file_sorter_2.__version__,"WIP")
     credit_table.add_row("Andrew1013","file_remover_2.py",file_remover_2.__version__,"WIP")
+    
     credit_table.add_section()
+    
     credit_table.add_row("Python Software Organization","Python 3",platform.python_version(),"")
     credit_table.add_row("Textualize","[italic]Rich library[/italic]",importlib.metadata.version("rich"),"")
+    credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
+    credit_table.add_row("The MongoDB Python Team","[italic]pymongo[/italic] Module",importlib.metadata.version("pymongo"),"")
+    credit_table.add_row("plotly.com","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"Only supported on Python 3.12.x")
+    if int(platform.python_version_tuple()[1]) < 12:
+        credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
@@ -71,10 +87,8 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]tracemalloc[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]string[/italic] Module",platform.python_version(),"")
-    credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
-    credit_table.add_row("plotly.com","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"Only supported on Python 3.12.x")
-    credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
-    
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]threading[/italic] Module",platform.python_version(),"")
+   
     #print table
     console.print(credit_table)
     console.print("[italic]i am dying pls send help pls[/italic]")
@@ -94,13 +108,14 @@ def schematic_view():
     plotter_tree.add("plotter() | schematic_view() | path_checker()")
     plotter_tree.add("runner.py").add("runner()")
     plotter_tree.add("logger.py").add("logger")
-    plotter_tree.add("file_seeker.py (work in progress)")
-    #plotter_tree.add("file_seeker.py").add("seeker() | flatten_list()")
+    plotter_tree.add("file_seeker.py").add("seeker() | flatten_list()")
     plotter_tree.add("file_remover.py").add("remover() | reporter()")
+    plotter_tree.add("file_seeker_2.py (work in progress)")
     plotter_tree.add("file_remover_2.py (work in progress)")
+    plotter_tree.add("telemetry.py").add("sys_fetcher.py | sys_uploader.py").add("fetcher() | writer() | pinger() | uploader()")
     console.print(plotter_tree)
 
-def plotter(directory, debug, iterations, file_output,debug_full):
+def plotter(directory, debug, debug_full, iterations, file_output):
     dataset = []
     iters = 0
     execution_time = 0
@@ -244,7 +259,18 @@ if __name__ == "__main__":
         #run until finished or Ctrl-C
         tracemalloc.start()
         try:
-            plotter(test_dir,dbg_flag,n_iters,fout,dbg_full_flag)
+            #plotter(test_dir,dbg_flag,n_iters,fout,dbg_full_flag)
+            
+            # create 2 threads of execution
+            main_process = threading.Thread(target=plotter,args=(test_dir,dbg_flag,dbg_full_flag,n_iters,fout,))
+            telemetry_process = threading.Thread(target=telemetry.telemetry,args=(dbg_flag,dbg_full_flag,))
+            # start execution
+            main_process.start()
+            telemetry_process.start()
+            # join up the 2 threads
+            main_process.join()
+            telemetry_process.join()
+            
             current_mem, peak_mem = tracemalloc.get_traced_memory()
             print(f"Peak memory used: {round(peak_mem / (1024 ** 2),3)}MB")
             tracemalloc.stop()
@@ -286,12 +312,16 @@ if __name__ == "__main__":
             elif sys.argv[1] == "version":
                 print(f"plotter.py version {__version__}")
                 print(f"runner.py version {runner.__version__}")
+                print(f"telemetry.py version {telemetry.__version__}")
+                print(f"logger.py version {logger.__version__}")
                 print(f"file_generator.py version {file_generator.__version__}")
                 print(f"file_seeker.py version {file_seeker.__version__}")
                 print(f"file_sorter.py version {file_sorter.__version__}")
                 print(f"file_sorter_2.py version (in testing) {file_sorter_2.__version__}")
                 print(f"file_remover.py version {file_remover.__version__}")
                 print(f"file_remover_2.py version (in testing) {file_remover_2.__version__}")
+                print(f"sys_fetcher.py version {sys_fetcher.__version__}")
+                print(f"sys_uploader.py version {sys_uploader.__version__}")
             elif sys.argv[1] == "credits":
                 show_credits()
             else :

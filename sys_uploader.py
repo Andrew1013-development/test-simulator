@@ -2,9 +2,9 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from urllib.parse import quote_plus
 
-__version__ = "1.0.0 | 1.0.0"
+__version__ = "1.0.1 | 1.0.1"
 
-def pinger(username, password, cluster_name) -> str:
+def pinger(username, password, cluster_name, debug_short, debug_full) -> str:
     #taken directly from MongoDB's documentation
     username = quote_plus(username)
     password = quote_plus(password)
@@ -18,13 +18,14 @@ def pinger(username, password, cluster_name) -> str:
     # Send a ping to confirm a successful connection
     try:
         client.admin.command('ping')
-        print("Pinged your deployment. You successfully connected to MongoDB!")
+        if debug_short:
+            print("Pinged your deployment. You successfully connected to MongoDB!")
         return uri
     except Exception as e:
         print(e)
         exit(1)
     
-def uploader(connection_string, sys_info) :    
+def uploader(connection_string, sys_info, debug_short, debug_full) :    
     # create a client and connect to the server
     client = MongoClient(connection_string, server_api=ServerApi('1'))
     
@@ -34,4 +35,5 @@ def uploader(connection_string, sys_info) :
     
     # upload fetched system info data to database
     system_inf_id = system_inf_collection.insert_one(sys_info).inserted_id
-    print(f"MongoDB upload ID: {system_inf_id}")
+    if debug_full:
+        print(f"MongoDB upload ID: {system_inf_id}")
