@@ -1,8 +1,6 @@
 *.pyc
 *.csv
 *.txt
-*.md
 *.log
 *.json
 *.env
-files/
