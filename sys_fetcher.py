@@ -3,9 +3,10 @@ import psutil
 import platform
 import json
 
-__version__ = "1.0.0"
+__version__ = "1.0.0 | 1.0.0"
 
 def fetcher() -> dict[str, str]:
+    sys_id = ""
     sys_info = {
         "platform": platform.platform().replace("-"," "),
         "processor": platform.processor(),
@@ -17,21 +18,21 @@ def fetcher() -> dict[str, str]:
         "python_version": platform.python_version(),
         "python_complier": platform.python_compiler(),
         "python_buildinfo": platform.python_build(),
-        "process_id": f"{os.getpid()}"
+        "process_id": f"{os.getpid()}",
     }
 
-    return sys_info
+    sys_id += str(hex(int(sys_info["python_version"][:-2].replace(".","")))).removeprefix("0x")
+    sys_id += str(hex(int(round(float(sys_info["cpu_frequency"][:-4]) / 1000,0)))).removeprefix("0x")
+    sys_id += str(hex(int(round(float(sys_info["cpu_frequency"][:-4]) % 1000,0)))).removeprefix("0x")
+    sys_id += str(hex(int(round(float(sys_info["ram"][:-3]) / 1000,0)))).removeprefix("0x")
+    sys_id += str(hex(int(round(float(sys_info["ram"][:-3]) % 1000,0)))).removeprefix("0x")
 
-def identifier(sys_info):
-    sys_id = ""
-    sys_id += sys_info["platform"][:-2].replace(".","")
-    sys_id += str(round(sys_info["cpu_frequency"] / 1000,0))
-    print(sys_id)
+    sys_info["system_id"] = sys_id
+
+    return sys_info
 
 def writer(sys_info):
     f = open("system_info.json","w+")
     json_writer = json.dumps(sys_info,indent=4)
     f.write(json_writer)
     f.close()
-
-identifier(fetcher())
