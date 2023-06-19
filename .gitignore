@@ -2,6 +2,7 @@
 *.csv
 *.txt
 *.log
-*.json
+system_info.json
 *.env
 files/
+node_modules/
