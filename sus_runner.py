@@ -71,7 +71,8 @@ def runner(directory1, directory2, debug_short, debug_full, dates):
     print(f"\tSorter: {round(sorter_time_2,3)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
     print(f"\tRemover: {round(remover_time_2,3)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
     print(f"Time dilation (delta): {round(delta_time_new,3)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
-
+    print()
+    print(f"Files sorted: {num_files}")
 if __name__ == "__main__" :
     dbg_flag = False
     fulldbg_flag = False
