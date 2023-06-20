@@ -19,7 +19,7 @@ from rich.tree import Tree
 from rich.table import Table
 
 console = Console()
-__version__ = "1.5.6"
+__version__ = "1.5.7"
 
 def show_credits():
     #create table
@@ -165,7 +165,7 @@ if __name__ == "__main__":
             if sys.argv[1] == "help":
                 print("""Usage: 
             python3 runner.py [dir] [debug_flag] [fulldebug_flag] [n_dates]
-            python3 runner.py help / schematic
+            python3 runner.py help/schematic/version/credits
 
             [dir]: specifies the directory where the runner will use to store files
             [debug_flag]: tells the script whether to use short debug output
