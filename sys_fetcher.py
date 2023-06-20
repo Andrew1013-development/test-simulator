@@ -3,7 +3,7 @@ import psutil
 import platform
 import json
 
-__version__ = "1.0.0 | 1.0.1"
+__version__ = "1.0.0 | 1.0.2"
 
 def fetcher() -> dict[str, str]:
     sys_id = ""
@@ -33,7 +33,7 @@ def fetcher() -> dict[str, str]:
 
 def writer(sys_info):
     cwd = os.getcwd()
-    json_path = os.path.join(cwd,"system_info.json")
+    json_path = os.path.join(cwd,"files","system_info.json")
     f = open(json_path,"w+")
     json_writer = json.dumps(sys_info,indent=4)
     f.write(json_writer)

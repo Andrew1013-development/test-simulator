@@ -25,7 +25,8 @@ import telemetry
 import sys_fetcher
 import sys_uploader
 if int(platform.python_version_tuple()[1]) < 12:
-    import matplotlib
+    #import matplotlib
+    pass
 else :
     import plotly.graph_objects
 
@@ -38,7 +39,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "2.0.0-WIP-1"
+__version__ = "2.0.0-WIP-2"
 
 def show_credits():
     #create table
@@ -75,8 +76,9 @@ def show_credits():
     credit_table.add_row("Giampaolo Rodola","[italic]psutil[/italic] Module",importlib.metadata.version("psutil"),"")
     credit_table.add_row("The MongoDB Python Team","[italic]pymongo[/italic] Module",importlib.metadata.version("pymongo"),"")
     credit_table.add_row("plotly.com","[italic]plotly[/italic] graphing library",importlib.metadata.version("plotly"),"Only supported on Python 3.12.x")
-    if int(platform.python_version_tuple()[1]) < 12:
-        credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
+    credit_table.add_row("Kenneth Reitz","[italic]certifi[/italic] library",importlib.metadata.version("certifi"),"")
+    # if int(platform.python_version_tuple()[1]) < 12:
+        #credit_table.add_row("matplotlib.org","[italic]matplotlib[/italic] graphing library",importlib.metadata.version("matplotlib"),"Only supported on Python 3.11.x and below")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]os[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]sys[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]shutil[/italic] Module",platform.python_version(),"")
@@ -223,6 +225,7 @@ def plotter(directory, debug, debug_full, iterations, file_output):
 if __name__ == "__main__":
     dbg_flag = False
     dbg_full_flag = False
+    tlm_flag = True
     fout = True
     n_iters = 1
 
@@ -255,7 +258,11 @@ if __name__ == "__main__":
             fout = False
         else :
             print("Invaild option for file output flag, defaulting to file output enabled.")
-        
+        if sys.argv[6] != "-notelemetry":
+            tlm_flag = False
+        else:
+            pass
+
         #run until finished or Ctrl-C
         tracemalloc.start()
         try:
@@ -266,13 +273,14 @@ if __name__ == "__main__":
             telemetry_process = threading.Thread(target=telemetry.telemetry,args=(dbg_flag,dbg_full_flag,))
             # start execution
             main_process.start()
-            telemetry_process.start()
-            # join up the 2 threads
-            main_process.join()
-            telemetry_process.join()
+            if tlm_flag:
+                telemetry_process.start()
+                # join up the 2 threads
+                main_process.join()
+                telemetry_process.join()
             
             current_mem, peak_mem = tracemalloc.get_traced_memory()
-            print(f"Peak memory used: {round(peak_mem / (1024 ** 2),3)}MB")
+            print(f"Peak memory used: {round(peak_mem / (1024 ** 2),3)} MB")
             tracemalloc.stop()
         except KeyboardInterrupt:
             print("Ctrl-C triggered, exiting....")
@@ -280,7 +288,7 @@ if __name__ == "__main__":
             logger.logger_module.error("execution halted unexpectedly")
             console.print_exception(show_locals=True)
             current_mem, peak_mem = tracemalloc.get_traced_memory()
-            print(f"Peak memory usage: {round(peak_mem / (1024 ** 2),3)}MB")
+            print(f"Peak memory usage: {round(peak_mem / (1024 ** 2),3) }MB")
             tracemalloc.stop()
             exit(1) #specify errorneous exit
             
@@ -291,8 +299,8 @@ if __name__ == "__main__":
                 schematic_view()
             elif sys.argv[1] == "help":
                 print("""Usage:
-            python3 plotter.py [dir] [debug_flag] [fulldebug_flag] [iters] [file_out]
-            python3 plotter.py help/schematic/version
+            python3 plotter.py [dir] [debug_flag] [fulldebug_flag] [iters] [file_out] [telemetry_flag]
+            python3 plotter.py credits/help/schematic/version
             
             [dir]: specifies the directory where the runner will use to store files
             [debug_flag]: tells the script whether to use short debug output
@@ -303,7 +311,9 @@ if __name__ == "__main__":
                 -nofulldebug: False -> full debug output disabled
                 Note: if fulldebug_flag is True but debug_flag is False, script will default revert debug_flag to True.
             [iters]: specifies how many times to run runner.py with increasing "n_dates"
-            [file_out] tells the script whethere to save time results into a text file
+            [file_out] tells the script whether to save time results into a text file
+            [telemetry_flag] tells the script whether to collect system information and upload it to a database
+                -notelemetry: False -> telemetry disabled
             
             help: display instructions on how to use this script
             schematic: shows schematic of this script (a test of rich.tree)
