@@ -8,13 +8,15 @@ import file_sorter
 import file_remover
 import file_sorter_2
 import file_remover_2
+import subprocess
 
-__version__ = "2.0.2"
+__version__ = "3.0.0-WIP1"
 
-def runner(directory1, directory2, debug_short, debug_full, dates):
+def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print("----------INFORMATION----------")
     print(f"testing directory 1 (test set 1): {directory1}")
-    print(f"testing directory 2 (test set 2): {directory2}")    
+    print(f"testing directory 2 (test set 2): {directory2}")
+    print(f"testing directory 3 (test set 3): {directory3}")    
     print(f"short debug flag: {debug_short}")
     print(f"full debug flag: {debug_full}")
     print(f"folders count: {dates}")
@@ -71,8 +73,14 @@ def runner(directory1, directory2, debug_short, debug_full, dates):
     print(f"\tSorter: {round(sorter_time_2,3)} seconds ({round(sorter_time_2 / execution_time_new * 100,3)}% of runtime)")
     print(f"\tRemover: {round(remover_time_2,3)} seconds ({round(remover_time / execution_time_new * 100,3)}% of runtime)")
     print(f"Time dilation (delta): {round(delta_time_new,3)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
-    print()
     print(f"Files sorted: {num_files}")
+    print()
+
+    start_cpp = time.time()
+    cpp_process = subprocess.run(["Z:\\test-simulator\\file_cpp\\make_compile.bat",directory3,debug_short,debug_full,dates])
+    end_cpp = time.time()
+    print(f"Time taken: {round(end_cpp - start_cpp,3)} seconds")
+
 if __name__ == "__main__" :
     dbg_flag = False
     fulldbg_flag = False
@@ -80,17 +88,18 @@ if __name__ == "__main__" :
     if len(sys.argv) == 6:
         dir1 = sys.argv[1]
         dir2 = sys.argv[2]
-        if sys.argv[3] == "-debug":
+        dir3 = sys.argv[3]
+        if sys.argv[4] == "-debug":
             dbg_flag = True
-        elif sys.argv[3] == "-nodebug":
+        elif sys.argv[4] == "-nodebug":
             dgb_flag = False
         else :
             print("oh you gay for debug flag")
-        if sys.argv[4] == "-fulldebug":
+        if sys.argv[5] == "-fulldebug":
             fulldbg_flag = True
-        elif sys.argv[4] == "-nofulldebug":
+        elif sys.argv[5] == "-nofulldebug":
             fulldbg_flag = False
         else:
             print("oh another gay")
-        n_dates = int(sys.argv[5])
-        runner(dir1, dir2, dbg_flag, fulldbg_flag, n_dates)
+        n_dates = int(sys.argv[6])
+        runner(dir1, dir2, dir3, dbg_flag, fulldbg_flag, n_dates)

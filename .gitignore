@@ -7,3 +7,7 @@ system_info.json
 *.env
 files/
 node_modules/
+*.a
+*.o
+*.exe
+*.lib

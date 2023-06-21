@@ -4,27 +4,30 @@
 #include <chrono>
 #include <random>
 #include <string>
-#include <map>
 #include <tuple>
 #include <vector>
-#include <format>
 #include <cmath>
 #include <iomanip>
 #include "modules.hpp"
 using namespace std;
 
 namespace file_cpp {
-    string random_string(unsigned long length) {
-    string rnd_str = "";
-    random_device string_generator;
-    uniform_int_distribution string_distributor(65,122);
-
-    for (int i = 0; i < length; i++) {
-        rnd_str += (char)string_distributor(string_generator);
+    void version() {
+        const string lib_version = "1.0.3";
+        cout << "Library version: " << lib_version << endl; 
     }
+    
+    string random_string(unsigned long length) {
+        string rnd_str = "";
+        random_device string_generator;
+        uniform_int_distribution string_distributor(65,122);
 
-    return rnd_str;
-}
+        for (int i = 0; i < length; i++) {
+            rnd_str += (char)string_distributor(string_generator);
+        }
+
+        return rnd_str;
+    }
 
     string filename_extractor(string basepath) {
         // get substring from the last position of the path delimiters
@@ -50,9 +53,7 @@ namespace file_cpp {
     }
 
     tuple<double, unsigned long> generator_cpp(string directory, bool debug_short, bool debug_full, unsigned long dates) {
-        map<string, unsigned long> table;
         vector<string> dates_vec;
-        vector<unsigned long> file_nums;
         unsigned long total_files = 0;
         vector<string> file_check;
         random_device generator;
@@ -87,13 +88,7 @@ namespace file_cpp {
             unsigned long files = files_distribution(generator);       
             
             dates_vec.push_back(datename);
-            file_nums.push_back(files);
-            total_files += files;
-        }
-
-        // create test files
-        for (unsigned long i = 0; i < dates; i++) {
-            for (unsigned long j = 0; j < file_nums.at(i); j++) {
+            for (unsigned long j = 0; j < files; j++) {
                 string filename = "";
                 
                 // more generation
@@ -120,7 +115,6 @@ namespace file_cpp {
                     }
                 }
 
-
                 file_check.push_back(filename);
                 
                 // string -> path
@@ -134,7 +128,10 @@ namespace file_cpp {
                 fout << dates_vec.at(i);
                 fout.close();
             }
+            total_files += files;
         }
+
+        // create test files
         auto end = chrono::steady_clock::now();
         
         // convert time object to actual numbers
