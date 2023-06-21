@@ -4,9 +4,12 @@ simulate sorting file by the first 8 characters of a filename as a date
 
 ## testing
 - main codebase (all .py files):
-  - Windows 11 build 25387.1200 - Python 3.12.0b2
+  - Windows 11 build 25393.1 - Python 3.12.0b2
   - Ubuntu 22.04.1 LTS (running via WSL2) - Python 3.10.6
   - macOS Catalina 10.15.7 (19H15) - Python 3.11.4
+  - Debian 11 (running via WSL2) - Python 3.9.17
+- main codebase reimplementation (all .cpp + .hpp files)
+  - Windows 11 build 25393.1 - g++ 13.1.0
 - setup files (listed individually):
   - setup_win.ps1:
     - Windows 11 build 25393.1
@@ -15,14 +18,12 @@ simulate sorting file by the first 8 characters of a filename as a date
     - macOS 11.7.7 Big Sur
     - Bash 3.2.57(1)-release
   - setup_linux.sh:
-    - Windows 11 build 25393.1
-    - WSL2 1.2.5.0
-    - Ububtu 22.04.1 LTS (kernel version 5.15.90.1)
-    - Bash 5.1.16(1)-release  
-
+    - Windows 11 build 25393.1 with WSL2 1.2.5.0
+    - Ububtu 22.04.1 LTS / Debian 11(kernel version 5.15.90.1)
+    - Bash 5.1.16(1)-release / Bash 5.1.4(1)-release
 ## how to setup
 What you need to run this collection of scripts:
-- Python 3.12 / 3.11 / 3.10
+- Python 3.12 / 3.11 / 3.10 / 3.9
 - one of the setup scripts for your platform / Git Bash
 How to run:
 - Clone straight from GitHub
