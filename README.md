@@ -10,6 +10,7 @@ simulate sorting file by the first 8 characters of a filename as a date
   - Debian 11 (running via WSL2) - Python 3.9.17
 - main codebase reimplementation (all .cpp + .hpp files)
   - Windows 11 build 25393.1 - g++ 13.1.0
+  - Ubuntu 22.04.1 LTS (running via WSL2) - g++ 11.3.0 (-libstdc++fs -std=c++20)
 - setup files (listed individually):
   - setup_win.ps1:
     - Windows 11 build 25393.1
