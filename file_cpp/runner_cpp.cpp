@@ -8,7 +8,7 @@
 #include "modules.hpp"
 using namespace std;
 
-const string version = "1.0.0-WIP6";
+const string version = "1.0.0-WIP7";
 
 int main(int argc, char** argv) {
     signal(SIGINT, exit); //bind SIGINT (Ctrl-C) to exit
@@ -16,13 +16,10 @@ int main(int argc, char** argv) {
     bool dbg_flag = false;
     bool dbgfull_flag = false;
     unsigned long n_iters = 1;
-    for (int i = 0; i < argc; i++) {
-        cout << argv[i] << endl;
-    }
 
     // input (type-cast the hell outta this because C++ thinks an array of chars is different from a string)
     // also damn C++ finally being more accessible once you get to know the STL huh
-    if (argc == 4) {
+    if (argc == 5) {
         test_dir = argv[1];
         if ((string)argv[2] == "-debug") {
             dbg_flag = true;
