@@ -13,4 +13,4 @@ ifeq ($(OS), Windows_NT)
 else
 	echo more gay
 	./runner_cpp.out
-	endif
+endif
