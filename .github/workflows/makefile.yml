@@ -20,10 +20,16 @@ jobs:
         dir
       
     - name: Install dependencies
-      run: make
+      run: | 
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make /home/runner/work/test-simulator/test-simulator/file_cpp/Makefile
 
     - name: Run check
-      run: make check
+      run: |
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make check
 
     - name: Run distcheck
-      run: make distcheck
+      run: |
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make distcheck
