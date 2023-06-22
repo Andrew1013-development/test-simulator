@@ -13,7 +13,7 @@ using namespace std;
 
 namespace file_cpp {
     void version() {
-        const string lib_version = "1.0.3";
+        const string lib_version = "1.1.0";
         cout << "Library version: " << lib_version << endl; 
     }
     
@@ -65,7 +65,7 @@ namespace file_cpp {
 
         // generating dates
         cout << "Creating test files....." << endl;
-        auto start = chrono::steady_clock::now();
+        auto start = chrono::high_resolution_clock::now();
         for (unsigned long i = 0; i < dates; i++) {
             string datename = "";
 
@@ -132,7 +132,7 @@ namespace file_cpp {
         }
 
         // create test files
-        auto end = chrono::steady_clock::now();
+        auto end = chrono::high_resolution_clock::now();
         
         // convert time object to actual numbers
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
@@ -147,7 +147,7 @@ namespace file_cpp {
         string folder_name = "";
         string folder_name_prev = "";
         cout << "Fetching and sorting files...." << endl;
-        auto start = chrono::steady_clock::now();
+        auto start = chrono::high_resolution_clock::now();
         for (auto const& dir_entry : filesystem::directory_iterator(directory)) {
             // generate folder name
             if (filesystem::is_regular_file(dir_entry)) {
@@ -173,7 +173,7 @@ namespace file_cpp {
                 }
             }   
         }
-        auto end = chrono::steady_clock::now();
+        auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
         double duration_num = duration.count() / pow(10,9);
         return duration_num;
@@ -181,7 +181,7 @@ namespace file_cpp {
 
     double remover_cpp(string directory, bool debug_short, bool debug_full) {
         cout << "Fetching and removing files...." << endl;
-        auto start = chrono::steady_clock::now();
+        auto start = chrono::high_resolution_clock::now();
         for (auto const& dir_entry : filesystem::recursive_directory_iterator(directory)) {
             if (filesystem::is_regular_file(dir_entry)) {
                 filesystem::remove(dir_entry);
@@ -191,7 +191,7 @@ namespace file_cpp {
             filesystem::remove(dir_entry);
         }
         filesystem::remove(directory);
-        auto end = chrono::steady_clock::now();
+        auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
         double duration_num = duration.count() / pow(10,9);
         return duration_num;
