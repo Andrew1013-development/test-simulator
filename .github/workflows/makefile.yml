@@ -17,9 +17,6 @@ jobs:
     - name: move to intended folder
       run: cd file_cpp
       
-    - name: configure
-      run: ./configure
-
     - name: Install dependencies
       run: make
 
