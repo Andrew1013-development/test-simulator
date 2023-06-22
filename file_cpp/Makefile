@@ -7,4 +7,8 @@ all:
 
 check:
 	g++ -o runner_cpp.out runner_cpp.cpp -O3 -L./ -lmodules
-	runner_cpp.out
+	ifeq ($(OS), Windows_NT)
+		runner_cpp.out
+	else
+		./runner_cpp.out
+	endif
