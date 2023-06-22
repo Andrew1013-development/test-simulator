@@ -7,10 +7,10 @@ all:
 
 check:
 	g++ -o runner_cpp.out runner_cpp.cpp -O3 -L./ -lmodules
-	ifeq ($(OS), Windows_NT)
-		echo less gay
-		runner_cpp.out
-	else
-		echo more gay
-		./runner_cpp.out
+ifeq ($(OS), Windows_NT)
+	echo less gay
+	runner_cpp.out
+else
+	echo more gay
+	./runner_cpp.out
 	endif
