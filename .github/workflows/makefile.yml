@@ -1,0 +1,35 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Move to intended folder
+      run: | 
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        dir
+      
+    - name: Install dependencies
+      run: | 
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make /home/runner/work/test-simulator/test-simulator/file_cpp/Makefile
+
+    - name: Run check
+      run: |
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make check
+
+    - name: Run distcheck
+      run: |
+        cd /home/runner/work/test-simulator/test-simulator/file_cpp
+        make distcheck
