@@ -10,7 +10,7 @@ import file_sorter_2
 import file_remover_2
 import subprocess
 
-__version__ = "3.0.0-WIP1"
+__version__ = "3.0.0-WIP2"
 
 def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print("----------INFORMATION----------")
@@ -76,8 +76,9 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print(f"Files sorted: {num_files}")
     print()
 
+    subprocess.run("Z:\\test-simulator\\file_cpp\\make_compile_win.bat")
     start_cpp = time.time()
-    cpp_process = subprocess.run(["Z:\\test-simulator\\file_cpp\\make_compile.bat",directory3,debug_short,debug_full,dates])
+    cpp_process = subprocess.run(["./runner_cpp",directory3,debug_short,debug_full,dates])
     end_cpp = time.time()
     print(f"Time taken: {round(end_cpp - start_cpp,3)} seconds")
 
