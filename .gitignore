@@ -12,3 +12,4 @@ node_modules/
 *.dylib
 *.so
 *.dll
+*.out

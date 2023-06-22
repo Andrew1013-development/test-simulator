@@ -5,4 +5,6 @@ all:
 	g++ -shared -o modules.dll modules.o
 	g++ -shared -o modules.dylib modules.o
 
-	g++ -o runner_cpp runner_cpp.cpp -O3 -L./ -lmodules
+check:
+	g++ -o runner_cpp.out runner_cpp.cpp -O3 -L./ -lmodules
+	runner_cpp.out
