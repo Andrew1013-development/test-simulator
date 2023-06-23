@@ -13,7 +13,7 @@ using namespace std;
 
 namespace file_cpp {
     void version() {
-        const string lib_version = "1.1.0";
+        const string lib_version = "1.1.1";
         cout << "Library version: " << lib_version << endl; 
     }
     
