@@ -152,10 +152,14 @@ namespace file_cpp {
             // generate folder name
             if (filesystem::is_regular_file(dir_entry)) {
                 filename = filename_extractor(dir_entry.path().string());
-                datename = filename.substr(0,8); // get a 8 characters long of year-month-day
-                folder_name = datename.substr(0,4) + "-" + datename.substr(4,2) + "-" + datename.substr(6,2);
-                
-                filesystem::path converted_directory = directory;
+		
+		// workaround to weird .txt reporting
+                if (filename.length() >= 8) {
+			datename = filename.substr(0,8); // get a 8 characters long of year-month-day
+		}
+		folder_name = datename.substr(0,4) + "-" + datename.substr(4,2) + "-" + datename.substr(6,2);
+		
+		filesystem::path converted_directory = directory;
                 filesystem::path converted_folder_name = folder_name;
                 filesystem::path converted_folder_name_prev = folder_name_prev;
                 filesystem::path converted_filename = filename;
