@@ -8,10 +8,10 @@ simulate sorting file by the first 8 characters of a filename as a date
   - Ubuntu 22.04.1 LTS (running via WSL2) - Python 3.10.6
   - macOS Catalina 10.15.7 (19H15) - Python 3.11.4
   - Debian 11 (running via WSL2) - Python 3.9.17
-- main codebase reimplementation (all .cpp + .hpp files)
+- main codebase C++ reimplementation (all .cpp + .hpp files)
   - Windows 11 build 25393.1 - g++ 13.1.0
-  - Ubuntu 22.04.1 LTS (running via WSL2) - g++ 11.3.0 (-libstdc++fs -std=c++20)
-- setup files (listed individually):
+  - Ubuntu 22.04.1 LTS (running via WSL2) - g++ 11.3.0
+**- setup files (listed individually):
   - setup_win.ps1:
     - Windows 11 build 25393.1
     - PowerShell 5.1.25387.1
@@ -21,7 +21,7 @@ simulate sorting file by the first 8 characters of a filename as a date
   - setup_linux.sh:
     - Windows 11 build 25393.1 with WSL2 1.2.5.0
     - Ububtu 22.04.1 LTS / Debian 11(kernel version 5.15.90.1)
-    - Bash 5.1.16(1)-release / Bash 5.1.4(1)-release
+    - Bash 5.1.16(1)-release / Bash 5.1.4(1)-release**
 ## how to setup
 What you need to run this collection of scripts:
 - Python 3.12 / 3.11 / 3.10 / 3.9
