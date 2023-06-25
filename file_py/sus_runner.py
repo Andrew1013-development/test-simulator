@@ -10,7 +10,7 @@ import file_sorter_2
 import file_remover_2
 import subprocess
 
-__version__ = "3.0.0-WIP2"
+__version__ = "3.0.0-WIP4"
 
 def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print("----------INFORMATION----------")
@@ -23,20 +23,16 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print()
 
     #generate 2 test folders
-    if debug_short or debug_full:
-        print("----------GENERATOR RUNNING----------")
+    print("----------GENERATOR RUNNING----------")
     generator_time,num_files = file_generator.generator(directory1,debug_short,dates,debug_full)
-    if debug_short or debug_full:
-        print("----------COPIER RUNNING----------")
+    print("----------COPIER RUNNING----------")
     copier_time = file_copier.copier(directory1,directory2,debug_short,debug_full)
 
     #main code for old modules
     start_old = time.time()
-    if debug_short or debug_full:
-        print("----------OLD SORTER RUNNING----------")
+    print("----------OLD SORTER RUNNING----------")
     sorter_time = file_sorter.sorter(directory1,debug_short,debug_full)
-    if debug_short or debug_full:
-        print("----------OLD REMOVER RUNNING----------")
+    print("----------OLD REMOVER RUNNING----------")
     remover_time = file_remover.reporter(directory1,debug_short,debug_full)
     end_old = time.time()
 
@@ -45,14 +41,11 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
 
     #main code for new modules
     start_new = time.time()
-    if debug_short or debug_full:
-        print("----------SEEKER RUNNING----------")
+    print("----------SEEKER RUNNING----------")
     seeker_time, filepath_list = file_seeker.seeker(directory2,debug_short,debug_full)
-    if debug_short or debug_full:
-        print("----------NEW SORTER RUNNING----------")
+    print("----------NEW SORTER RUNNING----------")
     sorter_time_2, filepath_list_sorted = file_sorter_2.sorter(filepath_list, directory2, debug_short,debug_full)
-    if debug_short or debug_full:
-        print("----------NEW REMOVER RUNNING----------")
+    print("----------NEW REMOVER RUNNING----------")
     remover_time_2 = file_remover_2.remover(filepath_list_sorted, directory2, debug_short,debug_full)
     end_new = time.time()
 
@@ -76,17 +69,11 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print(f"Files sorted: {num_files}")
     print()
 
-    subprocess.run("Z:\\test-simulator\\file_cpp\\make_compile_win.bat")
-    start_cpp = time.time()
-    cpp_process = subprocess.run(["./runner_cpp",directory3,debug_short,debug_full,dates])
-    end_cpp = time.time()
-    print(f"Time taken: {round(end_cpp - start_cpp,3)} seconds")
-
 if __name__ == "__main__" :
     dbg_flag = False
     fulldbg_flag = False
 
-    if len(sys.argv) == 6:
+    if len(sys.argv) == 7:
         dir1 = sys.argv[1]
         dir2 = sys.argv[2]
         dir3 = sys.argv[3]

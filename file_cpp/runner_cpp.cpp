@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <tuple>
+#include <vector>
 #include <chrono>
 #include <cmath>
 #include <string>
@@ -8,7 +9,7 @@
 #include "modules.hpp"
 using namespace std;
 
-const string version = "1.0.0-WIP7";
+const string version = "1.0.0";
 
 int main(int argc, char** argv) {
     signal(SIGINT, exit); //bind SIGINT (Ctrl-C) to exit
@@ -43,8 +44,8 @@ int main(int argc, char** argv) {
 
         // main code
         auto start = chrono::high_resolution_clock::now();
-        tuple<double, unsigned long> generator_result = file_cpp::generator_cpp(test_dir,dbg_flag,dbgfull_flag,n_iters);
-        double sorter_time = file_cpp::sorter_cpp(test_dir,dbg_flag,dbgfull_flag);
+        tuple<double, unsigned long, vector<string>> generator_result = file_cpp::generator_cpp(test_dir,dbg_flag,dbgfull_flag,n_iters);
+        double sorter_time = file_cpp::sorter_cpp(test_dir,get<2>(generator_result),dbg_flag,dbgfull_flag);
         double remover_time = file_cpp::remover_cpp(test_dir,dbg_flag,dbgfull_flag);
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
@@ -52,8 +53,14 @@ int main(int argc, char** argv) {
 
         // set number output mode to have actual decimal points (another fuck you C++)
         cout << fixed << setprecision(3);
-        cout << get<0>(generator_result) << " " << sorter_time << " " << remover_time << " " << get<1>(generator_result) << endl;
-        cout << duration_num << endl;
+        cout << "----------------------------EXECUTION INFORMATION (C++ REIMPLEMENTATION)---------------------------" << endl;
+        cout << "Total time to execute all 3 functions (runner time): " << duration_num  << " seconds" << endl;
+        cout << "Individual time of each segment (individual function time):" << endl;
+        cout << "\tGenerator : " << get<0>(generator_result) << " seconds (" << get<0>(generator_result) / duration_num * 100 << "% of runtime)" << endl; 
+        cout << "\tSorter : " << sorter_time << " seconds (" << sorter_time / duration_num * 100 << "% of runtime)" << endl;
+        cout << "\tRemover : " << remover_time << " seconds (" << sorter_time / duration_num * 100 << "% of runtime)" << endl;
+        cout << "Files sorted: " << get<1>(generator_result) << endl;
+        cout << endl;
     } else {
         cout << "no runner_cpp for you." << endl;
     }
