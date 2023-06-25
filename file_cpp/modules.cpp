@@ -14,7 +14,7 @@ using namespace std;
 
 namespace file_cpp {
     void version() {
-        const string lib_version = "1.2.0";
+        const string lib_version = "1.3.0";
         cout << "Library version: " << lib_version << endl; 
     }
     
@@ -35,6 +35,13 @@ namespace file_cpp {
         string filename = basepath.substr(basepath.find_last_of("/\\") + 1);
         return filename;
     }
+    /*
+    string path_extractor(string basepath) {
+        string filename = filename_extractor(basepath);
+        string path = basepath - filename;
+        return path;
+    }
+    */
 
     void copy_file(string path1, string path2) {
         string buffer;
@@ -51,6 +58,31 @@ namespace file_cpp {
     void move_file(string path1, string path2) {
         copy_file(path1, path2);
         //filesystem::remove(path1_1); problematic code somehow
+    }
+
+    double copier_cpp(string directory1, string directory2, bool debug_short, bool debug_full) {
+        string filename = "";
+        filesystem::path converted_directory1 = directory1;
+        filesystem::path converted_directory2 = directory2;
+        
+        auto start = chrono::high_resolution_clock::now();
+
+        cout << "Creating copy folder...." << endl;
+        filesystem::create_directories(directory2);
+
+        cout << "Fetching and copying files....." << endl;
+        for (auto const& dir_entry : filesystem::directory_iterator(converted_directory1)) {
+            filename = filename_extractor(dir_entry.path().string());
+            filesystem::path src = converted_directory1 / filename;
+            filesystem::path dst = converted_directory2 / filename;
+            copy_file(src.string(),dst.string());
+        }
+        auto end = chrono::high_resolution_clock::now();
+        
+        auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
+        double duration_num = duration.count() / pow(10,9);
+        
+        return duration_num;
     }
 
     tuple<double, unsigned long, vector<string>> generator_cpp(string directory, bool debug_short, bool debug_full, unsigned long dates) {
