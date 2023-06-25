@@ -1,13 +1,15 @@
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <tuple>
+#include <vector>
 #include <chrono>
 #include <cmath>
+#include <string>
+#include <csignal>
 #include "modules.hpp"
 using namespace std;
 
-const string version = "1.1.1";
+const string version = "1.1.2";
 
 int main(int argc, char** argv) {
     signal(SIGINT, exit); //bind SIGINT (Ctrl-C) to exit
