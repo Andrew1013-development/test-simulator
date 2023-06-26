@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include <tuple>
+#include <vector>
 
 namespace file_cpp {
     void version();
