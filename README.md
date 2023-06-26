@@ -2,7 +2,12 @@
 ## description
 simulate sorting file by the first 8 characters of a filename as a date
 
-## test platforms
+## dependencies (C++)
+- `implot`
+- `imgui`
+- `SDL(2)`
+
+## test platforms:
 - main codebase (all .py files):
   - Windows 11 build 25393.1 - Python 3.12.0b2 - g++ 13.1.0
   - Ubuntu 22.04.1 LTS (running via WSL2) - Python 3.10.6 - g++ 11.3.0
