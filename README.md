@@ -2,6 +2,10 @@
 ## description
 simulate sorting file by the first 8 characters of a filename as a date
 
+## available languages:
+- Python 3.9 -> 3.12
+- C++20
+
 ## dependencies (C++)
 - `implot`
 - `imgui`
