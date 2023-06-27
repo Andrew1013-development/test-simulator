@@ -12,5 +12,4 @@ node_modules/
 *.dylib
 *.so
 *.dll
-!SDL2.dll
 *.out

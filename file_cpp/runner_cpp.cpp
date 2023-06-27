@@ -7,9 +7,8 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
+#define VERSION 1.0.3
 using namespace std;
-
-const string version = "1.0.1";
 
 int main(int argc, char** argv) {
     signal(SIGINT, exit); //bind SIGINT (Ctrl-C) to exit
@@ -50,7 +49,7 @@ int main(int argc, char** argv) {
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
         double duration_num = duration.count() / pow(10,9);
-
+        double delta_time = duration_num - get<0>(generator_result) - sorter_time - remover_time; 
         // set number output mode to have actual decimal points (another fuck you C++)
         cout << fixed << setprecision(3);
         cout << "----------------------------EXECUTION INFORMATION (C++ REIMPLEMENTATION)---------------------------" << endl;
@@ -59,6 +58,7 @@ int main(int argc, char** argv) {
         cout << "\tGenerator : " << get<0>(generator_result) << " seconds (" << get<0>(generator_result) / duration_num * 100 << "% of runtime)" << endl; 
         cout << "\tSorter : " << sorter_time << " seconds (" << sorter_time / duration_num * 100 << "% of runtime)" << endl;
         cout << "\tRemover : " << remover_time << " seconds (" << remover_time / duration_num * 100 << "% of runtime)" << endl;
+        cout << "\tTime dilation (delta) : " << delta_time << " seconds (" << delta_time / duration_num * 100 << "% of runtime)" << endl; 
         cout << "Files sorted: " << get<1>(generator_result) << endl;
         cout << endl;
     } else {

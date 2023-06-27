@@ -7,9 +7,8 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
+#define VERSION 1.1.3
 using namespace std;
-
-const string version = "1.1.2";
 
 int main(int argc, char** argv) {
     signal(SIGINT, exit); //bind SIGINT (Ctrl-C) to exit
