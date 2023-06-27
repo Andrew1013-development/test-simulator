@@ -1,6 +1,7 @@
-import os
+import platform
 import sys
 import time
+import subprocess
 import file_generator
 import file_copier
 import file_seeker
@@ -8,11 +9,15 @@ import file_sorter
 import file_remover
 import file_sorter_2
 import file_remover_2
-import subprocess
 
-__version__ = "3.0.0-WIP4"
+platform_flag = platform.platform().split("-")[0]
+__version__ = "3.0.0-WIP6"
+if platform_flag == "Windows":
+    executable_name = "sus_runner_cpp.exe"
+else:
+    executable_name = "./sus_runner_cpp.out"
 
-def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
+def sus_runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print("----------INFORMATION----------")
     print(f"testing directory 1 (test set 1): {directory1}")
     print(f"testing directory 2 (test set 2): {directory2}")
@@ -26,7 +31,8 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print("----------GENERATOR RUNNING----------")
     generator_time,num_files = file_generator.generator(directory1,debug_short,dates,debug_full)
     print("----------COPIER RUNNING----------")
-    copier_time = file_copier.copier(directory1,directory2,debug_short,debug_full)
+    file_copier.copier(directory1,directory2,debug_short,debug_full)
+    file_copier.copier(directory1,directory3,debug_short,debug_full)
 
     #main code for old modules
     start_old = time.time()
@@ -58,6 +64,8 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print(f"\tSorter: {round(sorter_time,3)} seconds ({round(sorter_time / (execution_time_old) * 100,3)}% of runtime)")
     print(f"\tRemover: {round(remover_time,3)} seconds ({round(remover_time / (execution_time_old) * 100,3)}% of runtime)")
     print(f"Time dilation (delta): {round(delta_time_old,3)} seconds ({round(delta_time_old / execution_time_old * 100,3)}% of runtime)")
+    print(f"Files sorted: {num_files}")
+    print()
 
     print("----------------------------EXECUTION INFORMATION (NEW MODULES)---------------------------")
     print(f"Total time to execute all 3 functions (runner time): {round(execution_time_new,3)} seconds")
@@ -68,6 +76,21 @@ def runner(directory1, directory2, directory3, debug_short, debug_full, dates):
     print(f"Time dilation (delta): {round(delta_time_new,3)} seconds ({round(delta_time_new / execution_time_new * 100,3)}% of runtime)")
     print(f"Files sorted: {num_files}")
     print()
+    
+    if debug_short:
+        debug_short_converted = "-debug"
+    else: 
+        debug_short_converted = "-nodebug"
+    if debug_full:
+        debug_full_converted = "-fulldebug"
+    else:
+        debug_full_converted = "-nofulldebug"
+    
+    cpp_process = subprocess.Popen([executable_name,dir3,debug_short_converted,debug_full_converted,str(dates)],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+    cpp_process_out = cpp_process.communicate()
+    lines = cpp_process_out[0].strip().splitlines()
+    for line in lines:
+        print(line.decode("utf-8"))
 
 if __name__ == "__main__" :
     dbg_flag = False
@@ -90,4 +113,4 @@ if __name__ == "__main__" :
         else:
             print("oh another gay")
         n_dates = int(sys.argv[6])
-        runner(dir1, dir2, dir3, dbg_flag, fulldbg_flag, n_dates)
+        sus_runner(dir1, dir2, dir3, dbg_flag, fulldbg_flag, n_dates)

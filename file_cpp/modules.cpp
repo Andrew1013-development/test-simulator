@@ -10,20 +10,34 @@
 #include <iomanip>
 #include <algorithm>
 #include "modules.hpp"
+#define VERSION "1.4.2"
 using namespace std;
 
 namespace file_cpp {
     void version() {
-        const string lib_version = "1.3.0";
-        cout << "Library version: " << lib_version << endl; 
+        cout << "Library version: " << VERSION << endl; 
     }
     
+    void file_output(vector<double>* time_vec, string filename) {
+        // open files
+        ofstream fout;
+        fout.open(filename,ofstream::out | ofstream::app);
+    
+        vector<double>::iterator iter;
+        for (iter = time_vec->begin(); iter != time_vec->end(); iter++) {
+            //cout << *iter << endl;
+            fout << *iter << ",";
+        }
+        fout << endl;
+        fout.close();
+    }
+
     string random_string(unsigned long length) {
         string rnd_str = "";
         random_device string_generator;
         uniform_int_distribution string_distributor(65,122);
 
-        for (int i = 0; i < length; i++) {
+        for (unsigned long i = 0; i < length; i++) {
             rnd_str += (char)string_distributor(string_generator);
         }
 
@@ -60,21 +74,40 @@ namespace file_cpp {
         //filesystem::remove(path1_1); problematic code somehow
     }
 
+    tuple<double, vector<string>, unsigned long> seeker_cpp(string directory, bool debug_short, bool debug_full) {
+        vector<string> filelist;
+        filesystem::path converted_directory = directory;
+        auto start = chrono::high_resolution_clock::now();
+        for (auto const& dir_entry : filesystem::directory_iterator(converted_directory)) {
+            filelist.push_back(dir_entry.path().string());
+        }
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
+        double duration_num = duration.count() / pow(10,9);
+        return make_tuple(duration_num, filelist, filelist.size());
+    }
+
     double copier_cpp(string directory1, string directory2, bool debug_short, bool debug_full) {
         string filename = "";
         filesystem::path converted_directory1 = directory1;
         filesystem::path converted_directory2 = directory2;
         
         auto start = chrono::high_resolution_clock::now();
-
-        cout << "Creating copy folder...." << endl;
+        if (debug_short) {
+            cout << "Creating copy folder...." << endl;
+        }
         filesystem::create_directories(directory2);
 
-        cout << "Fetching and copying files....." << endl;
+        if (debug_short) {
+            cout << "Fetching and copying files....." << endl;
+        }
         for (auto const& dir_entry : filesystem::directory_iterator(converted_directory1)) {
             filename = filename_extractor(dir_entry.path().string());
             filesystem::path src = converted_directory1 / filename;
             filesystem::path dst = converted_directory2 / filename;
+            if (debug_full) {
+                cout << src.string() << " -> " << dst.string() << endl;
+            }
             copy_file(src.string(),dst.string());
         }
         auto end = chrono::high_resolution_clock::now();
@@ -94,11 +127,16 @@ namespace file_cpp {
         filesystem::path converted_directory = directory;
         
         // create test folder
-        cout << "Creating test folder...." << endl;
+        if (debug_short) {
+            cout << "Creating test folder...." << endl;
+        }
+        
         filesystem::create_directories(directory);
 
         // generating dates
-        cout << "Creating test files....." << endl;
+        if (debug_short) {
+            cout << "Creating test files....." << endl;
+        }
         auto start = chrono::high_resolution_clock::now();
         for (unsigned long i = 0; i < dates; i++) {
             string datename = "";
@@ -122,6 +160,9 @@ namespace file_cpp {
             unsigned long files = files_distribution(generator);       
             
             dates_vec.push_back(datename);
+            if (debug_full) {
+                cout << datename << endl;
+            }
             for (unsigned long j = 0; j < files; j++) {
                 string filename = "";
                 
@@ -154,7 +195,9 @@ namespace file_cpp {
                 // string -> path
                 filesystem::path converted_filename = filename;
                 filesystem::path file_dir = converted_directory / converted_filename;
-
+                if (debug_full) {
+                    cout << file_dir.string() << endl;
+                }
                 // write files
                 fout.open(file_dir);
                 fout << dates_vec.at(i);
@@ -168,6 +211,7 @@ namespace file_cpp {
         // convert time object to actual numbers
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
         double duration_num = duration.count() / pow(10,9);
+        
         return make_tuple(duration_num,total_files,file_check);
     }
 
@@ -178,7 +222,9 @@ namespace file_cpp {
         vector<string>::iterator filename_iter;
         filesystem::path converted_directory = directory;
         
-        cout << "Fetching and sorting files...." << endl;
+        if (debug_short) {
+            cout << "Fetching and sorting files...." << endl;
+        }
         auto start = chrono::high_resolution_clock::now();
         
         for (long long unsigned int i = 0; i < filename_list.size(); i++) {
@@ -195,10 +241,16 @@ namespace file_cpp {
                 filesystem::path converted_folder_path_new_1 = converted_directory / converted_folder_name;
                 filesystem::create_directory(converted_folder_path_new_1);
                 filesystem::path converted_folder_path_new_2 = converted_folder_path_new_1 / converted_filename;
+                if (debug_full) {
+                    cout << converted_folder_path.string() << " " << converted_folder_path_new_2.string() << endl;
+                }
                 move_file(converted_folder_path.string(), converted_folder_path_new_2.string());
                 folder_name_prev = folder_name;
             } else {
                 filesystem::path converted_folder_path_old = converted_directory / converted_folder_name_prev / converted_filename;
+                if (debug_full) {
+                    cout << converted_folder_path.string() << " " << converted_folder_path_old.string() << endl;
+                }
                 move_file(converted_folder_path.string(), converted_folder_path_old.string());
             }
         }
@@ -206,18 +258,27 @@ namespace file_cpp {
         
         auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
         double duration_num = duration.count() / pow(10,9);
+        
         return duration_num;
     }
 
     double remover_cpp(string directory, bool debug_short, bool debug_full) {
-        cout << "Fetching and removing files...." << endl;
+        if (debug_short) {
+            cout << "Fetching and removing files...." << endl;
+        }
         auto start = chrono::high_resolution_clock::now();
         for (auto const& dir_entry : filesystem::recursive_directory_iterator(directory)) {
             if (filesystem::is_regular_file(dir_entry)) {
+                if (debug_full) {
+                    cout << dir_entry.path().string() << endl;
+                }
                 filesystem::remove(dir_entry);
             }
         }
         for (auto const& dir_entry : filesystem::directory_iterator(directory)) {
+            if (debug_full) {
+                cout << dir_entry.path().string() << endl;
+            }
             filesystem::remove(dir_entry);
         }
         filesystem::remove(directory);
