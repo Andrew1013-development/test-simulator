@@ -11,7 +11,7 @@ import file_sorter_2
 import file_remover_2
 
 platform_flag = platform.platform().split("-")[0]
-__version__ = "3.0.0-WIP5"
+__version__ = "3.0.0-WIP6"
 if platform_flag == "Windows":
     executable_name = "sus_runner_cpp.exe"
 else:
@@ -31,7 +31,8 @@ def sus_runner(directory1, directory2, directory3, debug_short, debug_full, date
     print("----------GENERATOR RUNNING----------")
     generator_time,num_files = file_generator.generator(directory1,debug_short,dates,debug_full)
     print("----------COPIER RUNNING----------")
-    copier_time = file_copier.copier(directory1,directory2,debug_short,debug_full)
+    file_copier.copier(directory1,directory2,debug_short,debug_full)
+    file_copier.copier(directory1,directory3,debug_short,debug_full)
 
     #main code for old modules
     start_old = time.time()

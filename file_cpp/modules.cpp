@@ -10,14 +10,25 @@
 #include <iomanip>
 #include <algorithm>
 #include "modules.hpp"
+#define VERSION "1.4.1"
 using namespace std;
 
 namespace file_cpp {
     void version() {
-        const string lib_version = "1.3.1";
-        cout << "Library version: " << lib_version << endl; 
+        cout << "Library version: " << VERSION << endl; 
     }
     
+    void file_output(vector<double>* time_vec, string filename) {
+        ofstream fout(filename);
+        vector<double>::iterator iter;
+        for (iter = time_vec->begin(); iter != time_vec->end(); iter++) {
+            //cout << *iter << endl;
+            fout << *iter << ",";
+        }
+        fout << endl;
+        fout.close();
+    }
+
     string random_string(unsigned long length) {
         string rnd_str = "";
         random_device string_generator;
@@ -58,6 +69,19 @@ namespace file_cpp {
     void move_file(string path1, string path2) {
         copy_file(path1, path2);
         //filesystem::remove(path1_1); problematic code somehow
+    }
+
+    tuple<double, vector<string>, unsigned long> seeker_cpp(string directory, bool debug_short, bool debug_full) {
+        vector<string> filelist;
+        filesystem::path converted_directory = directory;
+        auto start = chrono::high_resolution_clock::now();
+        for (auto const& dir_entry : filesystem::directory_iterator(converted_directory)) {
+            filelist.push_back(dir_entry.path().string());
+        }
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);
+        double duration_num = duration.count() / pow(10,9);
+        return make_tuple(duration_num, filelist, filelist.size());
     }
 
     double copier_cpp(string directory1, string directory2, bool debug_short, bool debug_full) {
