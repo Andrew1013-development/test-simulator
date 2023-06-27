@@ -26,5 +26,5 @@ all:
 	g++ -o runner_cpp.$(EXECUTABLE_EXTENSION) runner_cpp.cpp $(MODULES_LIB)  $(CPP_FLAGS)
 	g++ -o sus_runner_cpp.$(EXECUTABLE_EXTENSION) sus_runner_cpp.cpp $(MODULES_LIB) $(CPP_FLAGS)
 	g++ -o plotter_cpp.$(EXECUTABLE_EXTENSION) plotter_cpp.cpp $(MODULES_LIB) $(CPP_FLAGS)
-	g++ -o plotter_cpp.exe plotter_cpp.cpp dependencies/imgui/backends/imgui_impl_sdl2.cpp dependencies/imgui/backends/imgui_impl_opengl3.cpp dependencies/imgui/imgui*.cpp -I./dependencies -L./ -I./dependencies/SDL -lSDL2 -lmodules -I./dependencies/SDL/include
+	g++ -o plotter_cpp.exe plotter_cpp.cpp $(MODULES_DIR) $(CPP_FLAGS)
 	echo Compiled.
