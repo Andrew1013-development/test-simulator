@@ -10,5 +10,5 @@
 #include "dependencies/imgui/imgui.h"
 
 int main() {
-    
+    return 0;   
 }
