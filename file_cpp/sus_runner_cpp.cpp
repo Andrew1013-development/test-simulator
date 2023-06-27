@@ -7,7 +7,7 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
-#define VERSION 1.1.3
+#define VERSION "1.1.3"
 using namespace std;
 
 int main(int argc, char** argv) {

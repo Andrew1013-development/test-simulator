@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <algorithm>
 #include "modules.hpp"
-#define VERSION "1.4.1"
+#define VERSION "1.4.2"
 using namespace std;
 
 namespace file_cpp {
@@ -19,7 +19,10 @@ namespace file_cpp {
     }
     
     void file_output(vector<double>* time_vec, string filename) {
-        ofstream fout(filename);
+        // open files
+        ofstream fout;
+        fout.open(filename,ofstream::out | ofstream::app);
+    
         vector<double>::iterator iter;
         for (iter = time_vec->begin(); iter != time_vec->end(); iter++) {
             //cout << *iter << endl;

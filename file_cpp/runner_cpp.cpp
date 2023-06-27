@@ -7,7 +7,7 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
-#define VERSION "1.0.3"
+#define VERSION "1.0.4"
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
         cout << "Files sorted: " << get<1>(generator_result) << endl;
 
         if (file_output) {
-            file_cpp::file_output(&time_results, "runtime_iterations_information.txt");
+            file_cpp::file_output(&time_results, "runtime_iterations_information_cpp.txt");
         }
         cout << endl;
     } else {
