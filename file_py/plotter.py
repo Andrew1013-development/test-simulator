@@ -39,7 +39,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "2.0.0-WIP-2"
+__version__ = "2.0.0-WIP3"
 
 def show_credits():
     #create table
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     fout = True
     n_iters = 1
 
-    if len(sys.argv) == 6:
+    if len(sys.argv) == 7:
         #6 full arguments
         test_dir = path_checker(sys.argv[1])
         if test_dir == "":
@@ -338,5 +338,5 @@ if __name__ == "__main__":
                 print(f"Invaild second argument '{sys.argv[1]}'.")
                 logger.logger_module.error("invaild second argument entered")
         else :
-            print(f"Expected 5 arguments, supplied {len(sys.argv) - 1} arguments")
+            print(f"Expected 6 arguments, supplied {len(sys.argv) - 1} arguments")
             logger.logger_module.error("not enough arguments to continue execution")

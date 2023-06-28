@@ -2,9 +2,10 @@ import os
 import logging
 import datetime
 
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 
 cwd = os.getcwd()
+os.makedirs(os.path.join(cwd,"files"),exist_ok=True)
 current_date = str(datetime.datetime.now().date())
 current_time = str(datetime.datetime.now().time())[:-7].replace(":","-")
 
