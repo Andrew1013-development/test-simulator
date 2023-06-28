@@ -39,7 +39,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "2.0.0-WIP3"
+__version__ = "2.0.0"
 
 def show_credits():
     #create table
@@ -258,7 +258,7 @@ if __name__ == "__main__":
             fout = False
         else :
             print("Invaild option for file output flag, defaulting to file output enabled.")
-        if sys.argv[6] != "-notelemetry":
+        if sys.argv[6] != "-telemetry":
             tlm_flag = False
         else:
             pass
