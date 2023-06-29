@@ -1,4 +1,6 @@
 # test-simulator
+[![CodeQL](https://github.com/Andrew1013-development/test-simulator/actions/workflows/codeql.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/codeql.yml) [![CxFlow](https://github.com/Andrew1013-development/test-simulator/actions/workflows/checkmarx.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/checkmarx.yml) [![DevSkim](https://github.com/Andrew1013-development/test-simulator/actions/workflows/devskim.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/devskim.yml) [![OSSAR](https://github.com/Andrew1013-development/test-simulator/actions/workflows/ossar.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/ossar.yml)
+
 ## description
 simulate sorting file by the first 8 characters of a filename as a date
 
