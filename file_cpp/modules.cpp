@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <algorithm>
 #include "modules.hpp"
-#define VERSION "1.4.2"
+#define VERSION "1.4.3"
 using namespace std;
 
 namespace file_cpp {
@@ -49,6 +49,7 @@ namespace file_cpp {
         string filename = basepath.substr(basepath.find_last_of("/\\") + 1);
         return filename;
     }
+    
     /*
     string path_extractor(string basepath) {
         string filename = filename_extractor(basepath);
@@ -56,7 +57,7 @@ namespace file_cpp {
         return path;
     }
     */
-
+   
     void copy_file(string path1, string path2) {
         string buffer;
         ifstream old_f(path1);
@@ -215,7 +216,7 @@ namespace file_cpp {
         return make_tuple(duration_num,total_files,file_check);
     }
 
-    double sorter_cpp(string directory, vector<string> filename_list, bool debug_short, bool debug_full) {
+    double sorter_cpp(string directory, vector<string>* filename_list, bool debug_short, bool debug_full) {
         string datename = "";
         string folder_name = "";
         string folder_name_prev = "";
@@ -227,13 +228,13 @@ namespace file_cpp {
         }
         auto start = chrono::high_resolution_clock::now();
         
-        for (long long unsigned int i = 0; i < filename_list.size(); i++) {
-            datename = filename_list.at(i).substr(0,8); // get a 8 characters long of year-month-day
+        for (long long unsigned int i = 0; i < filename_list->size(); i++) {
+            datename = filename_list->at(i).substr(0,8); // get a 8 characters long of year-month-day
 		    folder_name = datename.substr(0,4) + "-" + datename.substr(4,2) + "-" + datename.substr(6,2);
 			
             filesystem::path converted_folder_name = folder_name;
             filesystem::path converted_folder_name_prev = folder_name_prev;
-            filesystem::path converted_filename = (filename_list.at(i));
+            filesystem::path converted_filename = (filename_list->at(i));
             filesystem::path converted_folder_path = converted_directory / converted_filename;
 
             // move files into folders
