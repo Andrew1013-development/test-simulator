@@ -1,14 +1,18 @@
-CPP_FLAGS = -Wall -Wextra -O3 -std=c++20
+CPP_FLAGS = -Wall -Wextra -O3 -std=c++20 -march=native -flto
 MODULES_LIB = -L./ -I./ -lmodules
+VERSION = 1.0.0
+#Linux vs Windows config shit
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE_EXTENSION = exe
 	MAKE_CALL = mingw32-make
 	COPY_CMD = copy
+	MOVE_CMD = move
 	LIST_DIR = dir
-else	
+else
 	EXECUTABLE_EXTENSION = out
 	MAKE_CALL = make
 	COPY_CMD = cp
+	MOVE_CMD = mv
 	LIST_DIR = ls
 endif
 
@@ -32,3 +36,6 @@ plotter:
 	$(COPY_CMD) libmodules.dll ..\file_py\libmodules.dll
 	$(COPY_CMD) libmodules.dylib ..\file_py\libmodules.dylib
 	@echo Copied to file_py.
+
+version:
+	@echo Current version: $(VERSION)

@@ -1,4 +1,6 @@
 # test-simulator
+[![CodeQL](https://github.com/Andrew1013-development/test-simulator/actions/workflows/codeql.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/codeql.yml) [![DevSkim](https://github.com/Andrew1013-development/test-simulator/actions/workflows/devskim.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/devskim.yml) [![OSSAR](https://github.com/Andrew1013-development/test-simulator/actions/workflows/ossar.yml/badge.svg)](https://github.com/Andrew1013-development/test-simulator/actions/workflows/ossar.yml)
+
 ## description
 simulate sorting file by the first 8 characters of a filename as a date
 
@@ -8,7 +10,7 @@ simulate sorting file by the first 8 characters of a filename as a date
 
 ## test platforms:
 - main codebase (all .py files):
-  - Windows 11 build 25393.1 - Python 3.12.0b2 (migrating to 3.12.0b3) - g++ 13.1.0
+  - Windows 11 build 25393.1 - Python 3.12.0b3 - g++ 13.1.0
   - Ubuntu 22.04.1 LTS (running via WSL2) - Python 3.10.6 (migrating to 3.10.11) - g++ 11.3.0
   - macOS Catalina 10.15.7 (19H15) - Python 3.11.4
   - Debian 11 (running via WSL2) - Python 3.9.17 - g++ 10.2.1

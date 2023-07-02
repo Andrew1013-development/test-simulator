@@ -7,7 +7,7 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
-#define VERSION "1.2.0"
+#define VERSION "1.2.1"
 using namespace std;
 
 void sus_runner(string directory, bool debug_short, bool debug_full) {
@@ -16,7 +16,7 @@ void sus_runner(string directory, bool debug_short, bool debug_full) {
     //double copier_time = file_cpp::copier_cpp(directory,directory2,debug_short,debug_full);
     auto start = chrono::high_resolution_clock::now();
     tuple<double, vector<string>, unsigned long> seeker_result = file_cpp::seeker_cpp(directory,debug_short,debug_full);
-    double sorter_time = file_cpp::sorter_cpp(directory,get<1>(seeker_result),debug_short,debug_full);
+    double sorter_time = file_cpp::sorter_cpp(directory,&get<1>(seeker_result),debug_short,debug_full);
     double remover_time = file_cpp::remover_cpp(directory,debug_short,debug_full);
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::nanoseconds>(end - start);

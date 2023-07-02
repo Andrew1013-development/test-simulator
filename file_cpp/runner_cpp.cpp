@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <map>
 #include <tuple>
 #include <vector>
 #include <chrono>
@@ -7,15 +8,33 @@
 #include <string>
 #include <csignal>
 #include "modules.hpp"
-#define VERSION "1.1.0"
+#define VERSION "1.2.1"
 using namespace std;
+
+enum options {
+    enum_help,
+    enum_credits,
+    enum_wrong,
+};
+
+options hashing(string const& option_string) {
+    if (option_string == "help") {
+        return enum_help;
+    }
+    if (option_string == "credits") {
+        return enum_credits;    
+    } 
+    else {
+        return enum_wrong;
+    }
+}
 
 void runner(string directory, bool debug_short, bool debug_full, unsigned long dates, bool file_output) {
     vector<double> time_results;
     
     auto start = chrono::high_resolution_clock::now();
     tuple<double, unsigned long, vector<string>> generator_result = file_cpp::generator_cpp(directory,debug_short,debug_full,dates);
-    double sorter_time = file_cpp::sorter_cpp(directory,get<2>(generator_result),debug_short,debug_full);
+    double sorter_time = file_cpp::sorter_cpp(directory,&get<2>(generator_result),debug_short,debug_full);
     double remover_time = file_cpp::remover_cpp(directory,debug_short,debug_full);
     auto end = chrono::high_resolution_clock::now();
     
@@ -92,7 +111,21 @@ int main(int argc, char** argv) {
         // main code
         runner(test_dir,dbg_flag,dbgfull_flag,n_iters,file_output);
     } else {
-        cout << "no runner_cpp for you." << endl;
+        if (argc == 2) {
+            switch(hashing(argv[1])) {
+                case enum_help:
+                    cout << "help menu triggered" << endl;
+                    break;
+                case enum_credits:
+                    cout << "credits menu triggered" << endl;
+                    break;
+                case enum_wrong:
+                    cout << "no menu triggered" << endl;
+                    break;
+            }
+        } else {
+            cout << "Expected 5 arguments, supplied " << argc << " arguments." << endl;  
+        }
     }
     return 0;
 }
