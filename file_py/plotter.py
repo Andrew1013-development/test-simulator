@@ -12,6 +12,8 @@ from rich.console import Console
 from rich.tree import Tree
 from rich.table import Table
 from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
+import plotly.graph_objects
+import subprocess
 
 # my written functions
 import file_remover_2
@@ -24,11 +26,7 @@ import file_copier
 import telemetry
 import sys_fetcher
 import sys_uploader
-if int(platform.python_version_tuple()[1]) < 12:
-    #import matplotlib
-    pass
-else :
-    import plotly.graph_objects
+
 
 progress_bar = Progress(
     SpinnerColumn(),
@@ -39,7 +37,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 def show_credits():
     #create table
@@ -90,6 +88,7 @@ def show_credits():
     credit_table.add_row("Python Standard Modules Maintainers","[italic]logging[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]string[/italic] Module",platform.python_version(),"")
     credit_table.add_row("Python Standard Modules Maintainers","[italic]threading[/italic] Module",platform.python_version(),"")
+    credit_table.add_row("Python Standard Modules Maintainers","[italic]subprocess[/italic] Module",platform.python_version(),"")
    
     #print table
     console.print(credit_table)
@@ -119,7 +118,6 @@ def schematic_view():
 
 def plotter(directory, debug, debug_full, iterations, file_output):
     dataset = []
-    iters = 0
     execution_time = 0
     execution_time_list = []
     generator_time = 0
@@ -132,9 +130,11 @@ def plotter(directory, debug, debug_full, iterations, file_output):
     delta_time_list = []
     total_files = 0
     total_files_list = []
+    plot_proceed = True
+
     #create data file
     print("Prearing data file.....")
-    f_track = open("runtime_iterations_information.txt","w+")
+    f_track = open("runtime_iterations_information.txt",mode="w+")
     f_track.truncate(0)
     print("Tracking data file created.")
     logger.logger_module.debug("runtime_iterations_information.txt created")
@@ -177,7 +177,7 @@ def plotter(directory, debug, debug_full, iterations, file_output):
     print("----------------------------EXECUTION INFORMATION (SUMMARY)---------------------------")
     print(f"Total files sorted: {total_files} files")
     print(f"Total time to execute all 3 functions: {round(execution_time,3)} seconds")
-    print(f"Individual time of each segment:")
+    print("Individual time of each segment:")
     print(f"\tGenerator: {round(generator_time,3)} seconds ({round(generator_time / execution_time * 100,3)}% of runtime)")
     print(f"\tSorter: {round(sorter_time,3)} seconds ({round(sorter_time / execution_time * 100,3)}% of runtime)")
     print(f"\tRemover: {round(remover_time,3)} seconds ({round(remover_time / execution_time * 100,3)}% of runtime)")
@@ -190,7 +190,7 @@ def plotter(directory, debug, debug_full, iterations, file_output):
             print(f"Run No.{i+1}")
             print(f"Total files sorted: {dataset[i][6]} files")
             print(f"Total time to execute all 3 functions: {round(dataset[i][1],3)} seconds")
-            print(f"Individual time of each segment:")
+            print("Individual time of each segment:")
             print(f"\tGenerator: {round(dataset[i][2],3)} seconds ({round(dataset[i][2] / dataset[i][1] * 100,3)}% of runtime)")
             print(f"\tSorter: {round(dataset[i][3],3)} seconds ({round(dataset[i][3] / dataset[i][1] * 100,3)}% of runtime)")
             print(f"\tRemover: {round(dataset[i][4],3)} seconds ({round(dataset[i][4] / dataset[i][1] * 100,3)}% of runtime)")
@@ -212,7 +212,13 @@ def plotter(directory, debug, debug_full, iterations, file_output):
     print("Exported runtime statistics to CSV file.")
     logger.logger_module.debug("done writing to runtime_stats.csv")
     
-    if int(platform.python_version_tuple()[1]) >= 12:
+    try:
+        plot_proceed = subprocess.check_output(["ping","127.0.0.1"])
+    except FileNotFoundError:
+        plot_proceed = False
+
+    if plot_proceed:
+        print("Proceeding with plotting.....")
         fig = plotly.graph_objects.Figure(
             data = [plotly.graph_objects.Bar(x=[i for i in range(1,n_iters+1)] , y=execution_time_list)],
             layout = plotly.graph_objects.Layout(
@@ -220,6 +226,8 @@ def plotter(directory, debug, debug_full, iterations, file_output):
             )
         )
         fig.show()
+    else:
+        print("Cannot ping to local IP address (127.0.0.1), aborting plotting...")
     
 
 if __name__ == "__main__":
@@ -284,7 +292,10 @@ if __name__ == "__main__":
             tracemalloc.stop()
         except KeyboardInterrupt:
             print("Ctrl-C triggered, exiting....")
-            file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
+            try:
+                file_remover.remover(test_dir, dbg_flag, dbg_full_flag)
+            except FileNotFoundError:
+                pass
             logger.logger_module.error("execution halted unexpectedly")
             console.print_exception(show_locals=True)
             current_mem, peak_mem = tracemalloc.get_traced_memory()
