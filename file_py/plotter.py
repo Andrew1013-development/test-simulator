@@ -14,6 +14,7 @@ from rich.table import Table
 from rich.progress import Progress, TextColumn, BarColumn, MofNCompleteColumn, SpinnerColumn, TimeElapsedColumn
 import plotly.graph_objects
 import subprocess
+import kaleido
 
 # my written functions
 import file_remover_2
@@ -37,7 +38,7 @@ progress_bar = Progress(
     transient=True
 )
 console = Console()
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 def show_credits():
     #create table
@@ -131,6 +132,7 @@ def plotter(directory, debug, debug_full, iterations, file_output):
     total_files = 0
     total_files_list = []
     plot_proceed = True
+    cwd = os.getcwd()
 
     #create data file
     print("Prearing data file.....")
@@ -216,18 +218,24 @@ def plotter(directory, debug, debug_full, iterations, file_output):
         plot_proceed = subprocess.check_output(["ping","127.0.0.1"])
     except FileNotFoundError:
         plot_proceed = False
-
+    
     if plot_proceed:
         print("Proceeding with plotting.....")
         fig = plotly.graph_objects.Figure(
             data = [plotly.graph_objects.Bar(x=[i for i in range(1,n_iters+1)] , y=execution_time_list)],
             layout = plotly.graph_objects.Layout(
-                title = plotly.graph_objects.layout.Title(text="test")
+                title = plotly.graph_objects.layout.Title(text="runtime statistics (bar grpah)"),
             )
         )
         fig.show()
     else:
         print("Cannot ping to local IP address (127.0.0.1), aborting plotting...")
+    
+    print("Saving plot graph to image...")
+    if not os.path.exists("images"):
+        os.mkdir("images")
+    fig.write_image(os.path.join(cwd,"images","plot.png"))
+    print("Saved plot graph to image.")
     
 
 if __name__ == "__main__":
@@ -273,9 +281,7 @@ if __name__ == "__main__":
 
         #run until finished or Ctrl-C
         tracemalloc.start()
-        try:
-            #plotter(test_dir,dbg_flag,n_iters,fout,dbg_full_flag)
-            
+        try:            
             # create 2 threads of execution
             main_process = threading.Thread(target=plotter,args=(test_dir,dbg_flag,dbg_full_flag,n_iters,fout,))
             telemetry_process = threading.Thread(target=telemetry.telemetry,args=(dbg_flag,dbg_full_flag,))
